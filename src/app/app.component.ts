@@ -3,19 +3,42 @@ import { HttpClient } from '@angular/common/http';
 
 import { NgxSpinnerService } from 'ngx-spinner';
 
+
+
+
+import { MoveDirection, ClickMode, HoverMode, OutMode, Container, Engine } from "tsparticles-engine";
+import { loadFull } from "tsparticles";
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.sass']
 })
 
-export class AppComponent {
+export class AppComponent  implements OnInit{
+  title = 'RemoveBG';
+  id = "tsparticles";
+
+  particlesUrl = "../assets/particles/particles.json";
+
+  particlesArray = ["../assets/particles/particles.json",
+                    "../assets/particles/particles2.json",
+                    "../assets/particles/particles3.json",
+                    "../assets/particles/particles4.json",
+                    "../assets/particles/particles5.json",
+                    "../assets/particles/particles6.json"]
 
   constructor(private http: HttpClient, private spinner: NgxSpinnerService)
   {
   }
 
-  title = 'RemoveBG';
+  ngOnInit() {
+
+
+    this.particlesUrl = this.particlesArray[Math.floor(Math.random() * this.particlesArray.length)];;
+  }
+
+
 
   imageSrc = '';
   imageList: string[] = [];
@@ -50,7 +73,7 @@ export class AppComponent {
         // this.imageList.push(e.target.result);
 
         const base64Image = e.target.result.toString().split(',')[1];
-        this.http.post<any>('http://localhost:5000/removebg', base64Image ).subscribe((response: any) => {
+        this.http.post<any>(`http://localhost:5000/removebg`, base64Image ).subscribe((response: any) => {
           console.log(response);
           this.imageList.push('data:image/jpeg;base64,' + response.image);
 
@@ -72,5 +95,17 @@ export class AppComponent {
     document.body.removeChild(link);
   }
   
+  particlesLoaded(container: Container): void {
+    console.log(container);
+  }
+
+  async particlesInit(engine: Engine): Promise<void> {
+      console.log(engine);
+
+      // Starting from 1.19.0 you can add custom presets or shape here, using the current tsParticles instance (main)
+      // this loads the tsparticles package bundle, it's the easiest method for getting everything ready
+      // starting from v2 you can add only the features you need reducing the bundle size
+      await loadFull(engine);
+  }
 
 }

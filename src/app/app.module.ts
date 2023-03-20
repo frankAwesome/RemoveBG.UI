@@ -11,6 +11,8 @@ import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 
 import { NgxSpinnerModule } from 'ngx-spinner';
 
+import { NgParticlesModule } from "ng-particles";
+
 
 interface NgxSpinnerConfig {
   type?: string;
@@ -23,6 +25,7 @@ interface NgxSpinnerConfig {
   ],
   imports: [
     BrowserModule,
+    NgParticlesModule,
     BrowserAnimationsModule,
     NgxSpinnerModule.forRoot({
       type: 'ball-scale-multiple'
