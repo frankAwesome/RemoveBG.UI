@@ -1,16 +1,38 @@
+<div class="hero-container" data-aos="fade-in">
+      
+  
+    <div class="drop-zone" (drop)="onDrop($event)" (dragover)="onDragOver($event)" style="margin-top: -100px;" [ngStyle]="{'visibility':hideDropBox ? 'visible' : 'hidden'}">
+      <p>drag and drop your image here</p>
+      <!-- <input type="file" (change)="onFileSelected($event)" multiple> -->
+    </div>
+    
+    <div class="image-gallery">
+      <div *ngFor="let image of imageList" class="image-container card">
+        <div><img [src]="image" alt="Uploaded image"></div>
+        <!-- <div><button type="button" (click)="downloadImage(image)">Download</button></div> -->
+
+        <div class="overlay">
+          <button type="button" class="buttondownload" (click)="downloadImage(image)">Download</button>
+        </div>
+      </div>
+
+      
+
+    </div>
+
+    
+
+</div>
+
+
+<div *ngIf="isLoading">
+    <ngx-spinner type="ball-scale-multiple"></ngx-spinner>
+  </div>
+
 
 
 <style>
-  :host {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-    font-size: 14px;
-    color: #333;
-    box-sizing: border-box;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-  }
-
-  h1,
+     h1,
   h2,
   h3,
   h4,
@@ -354,66 +376,7 @@
   color: #1951d5;
 }
 
-
 </style>
-
-
-  <section class="hero">
-
-    <ng-particles
-    [id]="id"
-    [url]="particlesUrl"
-    [particlesInit]="particlesInit"
-    (particlesLoaded)="particlesLoaded($event)"
-    style="height: 100%;"
-></ng-particles>
-
-<nav class="navbar navbar-expand-lg navbar-light bg-light" style="border-radius: 30px; margin-left: 20px; margin-top: 26px; margin-right: 20px; margin-bottom: 200px;">
-  <div class="container-fluid">
-    <a class="navbar-brand" href="index.html" style="margin-left: 30px;">fbgr.ai</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarText">
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        <li class="nav-item">
-          <a class="nav-link" aria-current="page" href="/">remove bg</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/imageedit">edit bg</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">donate</a>
-        </li>
-      </ul>
-      <!-- <span class="navbar-text">
-        Navbar text with an inline element
-      </span> -->
-    </div>
-  </div>
-</nav>
-
-  
-  
-
-
-<router-outlet></router-outlet>
-
-         
-
-  </section>
-
-
-  
-
-<div *ngIf="isLoading">
-  <ngx-spinner type="ball-scale-multiple"></ngx-spinner>
-</div>
-
-
-
-
-
 
 
 

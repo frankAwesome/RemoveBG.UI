@@ -12,6 +12,8 @@ import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { NgxSpinnerModule } from 'ngx-spinner';
 
 import { NgParticlesModule } from "ng-particles";
+import { EditimageComponent } from './pages/editimage/editimage.component';
+import { UploadcomponentComponent } from './components/uploadcomponent/uploadcomponent.component';
 
 
 interface NgxSpinnerConfig {
@@ -21,7 +23,9 @@ interface NgxSpinnerConfig {
 @NgModule({
   declarations: [
     AppComponent,
-    SpinnerComponent
+    SpinnerComponent,
+    EditimageComponent,
+    UploadcomponentComponent
   ],
   imports: [
     BrowserModule,
