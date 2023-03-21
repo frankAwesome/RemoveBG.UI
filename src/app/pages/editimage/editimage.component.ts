@@ -23,6 +23,7 @@ export class EditimageComponent implements OnInit {
   private translateY: number = 0;
 
   private isDragging: boolean = false;
+  private isResizing: boolean = false;
   private dragStartX: number = 0;
   private dragStartY: number = 0;
 
@@ -39,11 +40,11 @@ export class EditimageComponent implements OnInit {
       if (ctx != null){
 
 
-        this.BGimage = "https://images.unsplash.com/photo-1604147495798-57beb5d6af73?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8YmxvY2slMjBiYWNrZ3JvdW5kfGVufDB8fDB8fA%3D%3D&w=1000&q=80";
-        this.FGimage = "https://images.unsplash.com/photo-1582845512747-e42001c95638?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxjb2xsZWN0aW9uLXRodW1ibmFpbHx8ODUwMTAwNXx8ZW58MHx8fHw%3D&auto=format&fit=crop&w=420&q=60";
+        this.BGimage = "../../assets/img/bmw.jpeg";
+        this.FGimage = "../../assets/img/image2.png";
 
 
-        this.canvas.setAttribute('style', "background: url('https://images.unsplash.com/photo-1604147495798-57beb5d6af73?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8YmxvY2slMjBiYWNrZ3JvdW5kfGVufDB8fDB8fA%3D%3D&w=1000&q=80'); background-repeat: no-repeat;");
+        this.canvas.setAttribute('style', "background: url(\'" + "../../assets/img/bmw.jpg" + "\'); background-repeat: no-repeat; background-size: 100% 100%;");
 
         this.img.crossOrigin = 'Anonymous';
 
@@ -172,7 +173,6 @@ export class EditimageComponent implements OnInit {
 }
 
 private onMouseDown(event: MouseEvent) {
-  // Check if the mouse is within the bounds of the image
   if (event.offsetX >= this.canvas.width / 2 - this.img.width / 2 &&
       event.offsetX <= this.canvas.width / 2 + this.img.width / 2 &&
       event.offsetY >= this.canvas.height / 2 - this.img.height / 2 &&
@@ -181,10 +181,29 @@ private onMouseDown(event: MouseEvent) {
     this.dragStartX = event.clientX;
     this.dragStartY = event.clientY;
   }
+
+  
+
+
+
+//   if (event.offsetX >= this.imgX && event.offsetX <= this.imgX + this.imgWidth && event.clientY>= this.imgY && event.clientY <= this.imgY + this.imgHeight) {
+//     this.isDragging = true;
+//     this.isResizing = false;
+//     this.dragStartX = event.clientX;
+//     this.dragStartY = event.clientY;
+// }
+// else if (event.offsetX >= this.imgX + this.imgWidth - 10 && event.offsetX <= this.imgX + this.imgWidth && event.clientY>= this.imgY + this.imgHeight - 10 && event.clientY <= this.imgY + this.imgHeight) {
+//   this.isResizing = true;
+//   this.isDragging = false;
+// }
+
+
+
 }
 
 private onMouseUp(event: MouseEvent) {
   this.isDragging = false;
+  this.isResizing = false;
 }
 
 private onMouseMove(event: MouseEvent) {
@@ -200,7 +219,23 @@ private onMouseMove(event: MouseEvent) {
 
       this.draw();
     }
+
+    if (this.isResizing) {
+        this.imgWidth = event.clientX - this.imgX;
+        this.imgHeight = event.clientY - this.imgY;
+        var ctx = this.canvas.getContext('2d');
+
+        this.draw();
+
+        if (ctx != null)
+        {
+          // ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+          // ctx.drawImage(this.img, this.imgX, this.imgY, this.imgWidth, this.imgHeight);
+          
+        }
+        
+    }
+    }
   }
 
-}
 
