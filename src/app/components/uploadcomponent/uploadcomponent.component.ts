@@ -3,11 +3,13 @@ import { HttpClient } from '@angular/common/http';
 
 import { NgxSpinnerService } from 'ngx-spinner';
 
-
-
-
 import { MoveDirection, ClickMode, HoverMode, OutMode, Container, Engine } from "tsparticles-engine";
 import { loadFull } from "tsparticles";
+
+import { AngularFireDatabase, AngularFireDatabaseModule } from '@angular/fire/compat/database';
+
+
+
 
 @Component({
   selector: 'app-uploadcomponent',
@@ -15,16 +17,14 @@ import { loadFull } from "tsparticles";
   styleUrls: ['./uploadcomponent.component.sass']
 })
 export class UploadcomponentComponent{
+    
 
-  constructor(private http: HttpClient, private spinner: NgxSpinnerService)
+
+
+  constructor(private http: HttpClient, private spinner: NgxSpinnerService, private db: AngularFireDatabase)
   {
   }
 
-  ngOnInit() {
-
-
-    // this.particlesUrl = this.particlesArray[Math.floor(Math.random() * this.particlesArray.length)];;
-  }
 
 
 
@@ -32,6 +32,9 @@ export class UploadcomponentComponent{
   imageList: string[] = [];
   hideDropBox: boolean = true;
   isLoading: boolean = false;
+
+
+
 
 
   onDrop(event: any) {
@@ -68,9 +71,14 @@ export class UploadcomponentComponent{
           this.spinner.hide();
         });
       };
-      reader.readAsDataURL(file);
+      reader.readAsDataURL(file)
       
     }
+
+    this.db.object('logs').set({"title":"hello"})
+    .then(() => console.log('Object written to database'))
+    .catch((error: any) => console.error('Error writing object to database', error));
+
   }
 
   downloadImage(image: string) {
