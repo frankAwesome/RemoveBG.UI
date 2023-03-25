@@ -26,7 +26,7 @@
   <br>
 
   <div style="padding: 10px; background-color: #eee; border-radius: 15px;">
-    <canvas id="canvas" #canvas width="800" height="500" crossorigin="anonymous"></canvas>
+    <canvas id="canvas" #canvas [width]="canvasWidth" [height]="canvasHeight" crossorigin="anonymous" (click)="handleCanvasClick($event)"></canvas>
   </div>
 
   
