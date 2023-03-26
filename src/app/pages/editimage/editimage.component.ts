@@ -301,7 +301,11 @@ private onMouseMove(event: MouseEvent) {
       
           var img3 = new Image();
           img3.crossOrigin = 'Anonymous';
-          img3.src = this.backgroundBase64Image;
+          if (this.backgroundBase64Image != '')
+          {img3.src = this.backgroundBase64Image;}
+          else
+          {img3.src = '../../assets/img/bmw.jpg';}
+
           img3.onload = () => {
             c.height = img3.height;
             c.width = img3.width;
