@@ -40,6 +40,7 @@ export class EditimageComponent implements OnInit {
   imgRatio = 3;
 
   base64Image = ''
+  backgroundBase64Image = ''
   canvasWidth = 612;
   canvasHeight = 428;
 
@@ -104,6 +105,8 @@ export class EditimageComponent implements OnInit {
         reader.onload = (e: any) => {
 
           const base64Image = 'data:image/jpeg;base64,' + e.target.result.toString().split(',')[1];
+
+          this.backgroundBase64Image = base64Image;
 
           var img = new Image;
           img.src = base64Image;
@@ -207,6 +210,8 @@ export class EditimageComponent implements OnInit {
         ctx.rect(this.imgX + 10, this.imgY + 10, this.imgWidth - 20, this.imgHeight - 20);
         ctx.stroke();
       }
+      this.imgX = this.canvas.width/2 - this.img.width/2/this.imgRatio;
+      this.imgY = this.canvas.height/2 - this.img.height/2/this.imgRatio;
       ctx.drawImage(this.img, this.imgX, this.imgY, this.imgWidth, this.imgHeight);
 
       this.startUp = true;
@@ -268,17 +273,14 @@ private onMouseMove(event: MouseEvent) {
 
     if (this.foreClicked) {
 
-      this.imgWidth = event.offsetX - this.imgX;
-      this.imgHeight = event.offsetY - this.imgY;
+      this.imgWidth = event.offsetX;
+      this.imgHeight = event.offsetY;
 
       this.draw();
         
     }
 
   }
-
-
-
 
     handleCanvasClick(event: MouseEvent) {
 
@@ -288,7 +290,7 @@ private onMouseMove(event: MouseEvent) {
 
     handleDownloadClick(event: MouseEvent) {
 
-      var c = <HTMLCanvasElement> document.getElementById('canvas');
+      var c = <HTMLCanvasElement> document.createElement('canvas');
 
       if (c)
       {
@@ -296,36 +298,40 @@ private onMouseMove(event: MouseEvent) {
 
         if (ctx)
         {
-          ctx.clearRect(0, 0, 800, 800);
       
           var img3 = new Image();
           img3.crossOrigin = 'Anonymous';
-          img3.src = this.BGimage;
+          img3.src = this.backgroundBase64Image;
           img3.onload = () => {
+            c.height = img3.height;
+            c.width = img3.width;
 
             if (ctx){
-
               ctx.drawImage(img3, 0, 0);
+              // ctx.restore();
+              // ctx.save();
             }  
-          };
-            if (ctx)
-            {
-            
-              var img2 = new Image();
-              img2.crossOrigin = 'Anonymous';
-              img2.src = this.FGimage
-              img2.onload = () => {
-                if (ctx){
-                
-                  ctx.drawImage(img2, this.imgX, this.imgY, this.imgWidth, this.imgHeight)
-                }             
-              };
 
-              const link = document.createElement('a');
-              link.download = 'download.png';
-              link.href = this.canvas.toDataURL('image/png');
-              link.click();
-          }
+            var img2 = new Image();
+            img2.crossOrigin = 'Anonymous';
+            img2.src = this.base64Image;
+            img2.onload = () => {
+              if (ctx){
+                //console.log(img2.src)
+                ctx.drawImage(img2, this.imgX, this.imgY, this.imgWidth, this.imgHeight)
+                ctx.restore();
+                ctx.save();
+
+                const link = document.createElement('a');
+                link.download = 'download.png';
+                link.href = c.toDataURL('image/png');
+                link.click();
+              }             
+            };
+
+
+          };
+
         
         }
       }
