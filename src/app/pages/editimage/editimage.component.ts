@@ -121,14 +121,18 @@ export class EditimageComponent implements OnInit {
       
             this.img.src = this.base64Image;
       
-            this.imgX = this.canvas.width/2 - this.img.width/2/this.imgRatio;
-            this.imgY = this.canvas.height/2 - this.img.height/2/this.imgRatio;
-            this.imgWidth = this.img.width/this.imgRatio;
-            this.imgHeight = this.img.height/this.imgRatio;
-
-      
             this.img.onload = () => {
+              this.foreClicked = false;
+              this.coordinatesChanged = false;
+        
+              this.imgX = this.canvas.width/2 - this.img.width/2/this.imgRatio;
+              this.imgY = this.canvas.height/2 - this.img.height/2/this.imgRatio;
+              this.imgWidth = this.img.width/this.imgRatio;
+              this.imgHeight = this.img.height/this.imgRatio;
+              //this.startUp = false;
               this.draw();
+        
+              this.startUp = true;
             }
       
           }
@@ -322,7 +326,7 @@ private onMouseMove(event: MouseEvent) {
             img2.onload = () => {
               if (ctx){
                 //console.log(img2.src)
-                ctx.drawImage(img2, this.imgX, this.imgY, this.imgWidth, this.imgHeight)
+                ctx.drawImage(img2, this.imgX - this.canvas.width/2, this.imgY - this.canvas.height/2, this.imgWidth, this.imgHeight)
                 ctx.restore();
                 ctx.save();
 
@@ -340,4 +344,40 @@ private onMouseMove(event: MouseEvent) {
         }
       }
     }
+
+
+
+    handleForegroundDownloadClick(event: MouseEvent) {
+
+      const byteString = atob(this.base64Image.split(',')[1]);
+      const mimeString = this.base64Image.split(',')[0].split(':')[1].split(';')[0];
+      const ab = new ArrayBuffer(byteString.length);
+      const ia = new Uint8Array(ab);
+      for (let i = 0; i < byteString.length; i++) {
+          ia[i] = byteString.charCodeAt(i);
+      }
+      const blob = new Blob([ab], { type: mimeString });
+
+      // Create a URL for the blob
+      const url = window.URL.createObjectURL(blob);
+        
+      // Create an anchor element to download the image
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'image.png';
+      
+      // Click the anchor element to download the image
+      a.click();
+      
+      // Release the URL object
+      window.URL.revokeObjectURL(url);
+
+
+      
+      };
+
+
+
+      
+    
   }
