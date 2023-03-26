@@ -1,5 +1,7 @@
+import { style } from '@angular/animations';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
+import { Background } from 'tsparticles-engine';
 
 @Component({
   selector: 'app-editimage',
@@ -9,36 +11,39 @@ import { DomSanitizer } from '@angular/platform-browser';
 export class EditimageComponent implements OnInit {
 
   fileToUpload: File | null = null;
-  imgX = 0;
-  imgY = 0;
-  imgWidth = 0;
-  imgHeight = 0;
+
   BGimage = '';
   FGimage = '';
   canvas: HTMLCanvasElement;
   private img = new Image;
 
-  private scaleFactor: number = 0.5;
+  private scaleFactor: number = 1;
   private translateX: number = 0;
   private translateY: number = 0;
 
   private isDragging: boolean = false;
   private isResizing: boolean = false;
-  private dragStartX: number = 0;
-  private dragStartY: number = 0;
+
+  imgX = 0;
+  imgY = 0;
+  imgWidth = 0;
+  imgHeight = 0;
+  prevX = 0; 
+  prevY = 0;
+
+  releasePrevX = 0; 
+  releasePrevY = 0;
 
 
-  private b4dragStartX: number = 0;
-  private b4dragStartY: number = 0;
+  startUp = false;
+
+  imgRatio = 3;
 
   base64Image = ''
+  canvasWidth = 612;
+  canvasHeight = 428;
 
-
-  canvasWidth = 800;
-  canvasHeight = 600;
-
-  foreClicked = true;
-
+  foreClicked = false;
   coordinatesChanged = false;
 
   constructor(private domSanitizer: DomSanitizer) {
@@ -54,7 +59,7 @@ export class EditimageComponent implements OnInit {
       if (ctx != null){
 
 
-        this.BGimage = "../../assets/img/bmw.jpeg";
+        this.BGimage = "../../assets/img/bmw.jpg";
         this.FGimage = "../../assets/img/image2.png";
 
         this.base64Image = this.FGimage;
@@ -66,26 +71,24 @@ export class EditimageComponent implements OnInit {
 
         this.img.src = this.FGimage;
 
-        this.imgX = this.canvas.width/2 - this.img.width/2;
-        this.imgY = this.canvas.height/2 - this.img.height/2;
-        this.imgWidth = this.img.width/2;
-        this.imgHeight = this.img.height/2;
+
 
         this.img.onload = () => {
           // Draw the image on the canvas
+          this.imgX = this.canvas.width/2 - this.img.width/2/this.imgRatio;
+          this.imgY = this.canvas.height/2 - this.img.height/2/this.imgRatio;
+          this.imgWidth = this.img.width/this.imgRatio;
+          this.imgHeight = this.img.height/this.imgRatio;
+
+
           this.draw();
           
   
           this.canvas.addEventListener('mousedown', this.onMouseDown.bind(this));
           this.canvas.addEventListener('mouseup', this.onMouseUp.bind(this));
           this.canvas.addEventListener('mousemove', this.onMouseMove.bind(this));
-          // this.canvas.addEventListener('wheel', this.onMouseWheel.bind(this));
         }
 
-
-
-        // Draw the image on the canvas
-        //ctx.drawImage(this.img, this.imgX, this.imgY, this.imgWidth, this.imgHeight);
 
       }
   }
@@ -108,38 +111,27 @@ export class EditimageComponent implements OnInit {
           img.onload = () => {
             this.canvasWidth = img.width;
             this.canvasHeight = img.height;
-
-            this.imgX = this.canvasWidth / 2  - this.img.width/2;
-            this.imgY = this.canvasHeight / 2  - this.img.height/2;
+            this.canvas.height = img.height;
+            this.canvas.width = img.width;
 
             this.canvas.setAttribute('style', "background: url(\'" + base64Image + "\'); background-repeat: no-repeat; background-size: 100% 100%;");
-
-            //console.log(base64Image);
       
             this.img.src = this.base64Image;
       
-            this.imgX = this.canvas.width/2 - this.img.width/2;
-            this.imgY = this.canvas.height/2 - this.img.height/2;
-            this.imgWidth = this.img.width/4;
-            this.imgHeight = this.img.height/4;
+            this.imgX = this.canvas.width/2 - this.img.width/2/this.imgRatio;
+            this.imgY = this.canvas.height/2 - this.img.height/2/this.imgRatio;
+            this.imgWidth = this.img.width/this.imgRatio;
+            this.imgHeight = this.img.height/this.imgRatio;
+
       
             this.img.onload = () => {
               this.draw();
-
-              
-      
-              // this.canvas.addEventListener('mousedown', this.onMouseDown.bind(this));
-              // this.canvas.addEventListener('mouseup', this.onMouseUp.bind(this));
-              // this.canvas.addEventListener('mousemove', this.onMouseMove.bind(this));
             }
       
           }
         };
 
-        
-        reader.readAsDataURL(file);
-
-        
+        reader.readAsDataURL(file);   
   }
 
 
@@ -148,42 +140,32 @@ export class EditimageComponent implements OnInit {
     event.preventDefault();
     const file = event.dataTransfer.files[0];
 
-
     const reader = new FileReader();
     reader.onload = (e: any) => {
 
-      this.base64Image = 'data:image/jpeg;base64,' + e.target.result.toString().split(',')[1];
+    this.base64Image = 'data:image/jpeg;base64,' + e.target.result.toString().split(',')[1];
 
-      //console.log(base64Image);
+    this.img.src = this.base64Image;
 
-      this.img.src = this.base64Image;
+    this.img.onload = () => {
 
-      this.imgX = this.canvas.width/2 - this.img.width/2;
-      this.imgY = this.canvas.height/2 - this.img.height/2;
-      this.imgWidth = this.img.width/4;
-      this.imgHeight = this.img.height/4;
+      this.foreClicked = false;
+      this.coordinatesChanged = false;
 
-      this.img.onload = () => {
-        // Draw the image on the canvas
-       
+      this.imgX = this.canvas.width/2 - this.img.width/2/this.imgRatio;
+      this.imgY = this.canvas.height/2 - this.img.height/2/this.imgRatio;
+      this.imgWidth = this.img.width/this.imgRatio;
+      this.imgHeight = this.img.height/this.imgRatio;
+      this.startUp = false;
+      this.draw();
 
-        // this.canvas.addEventListener('mousedown', this.onMouseDown.bind(this));
-        // this.canvas.addEventListener('mouseup', this.onMouseUp.bind(this));
-        // this.canvas.addEventListener('mousemove', this.onMouseMove.bind(this));
+      this.startUp = true;
 
-        this.foreClicked = true;
-        this.coordinatesChanged = false;
-        this.b4dragStartX  = 0
-        this.b4dragStartY  = 0
 
-        this.draw();
-      }
-
+    }
 
     };
     reader.readAsDataURL(file);
-
-
   }
 
   onDragOver(event: any) {
@@ -191,45 +173,47 @@ export class EditimageComponent implements OnInit {
   }
 
   private draw() {
-
-    
-
     var ctx = this.canvas.getContext('2d');
 
-    console.log(ctx)
     if (ctx){
     ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-
-    // Save the current context state
     ctx.save();
-
-    // Translate the context to the center of the canvas
-    ctx.translate(this.canvas.width / 2, this.canvas.height / 2);
-
-    // Apply the scale factor
-    ctx.scale(this.scaleFactor, this.scaleFactor);
-
-    // Translate the context to the current position
-    ctx.translate(this.translateX, this.translateY);
+    // ctx.translate(this.canvas.width / 2, this.canvas.height / 2);
+    // ctx.scale(this.scaleFactor, this.scaleFactor);
+    // ctx.translate(this.translateX, this.translateY);
 
 
-if (this.foreClicked)
-{
-  ctx.beginPath();
-  ctx.lineWidth = 5;
-  ctx.strokeStyle = "lightblue";
-  ctx.rect(this.img.x + (this.img.width / 2) + 10, this.img.y + (this.img.height / 2) + 10, -this.img.width - 20, -this.img.height - 20);
-  ctx.stroke();
-}
 
+    if (this.startUp)
+    {
+      if (this.foreClicked)
+      {
+        ctx.beginPath();
+        ctx.lineWidth = 5;
+        ctx.strokeStyle = "lightblue";
+        ctx.rect(this.imgX - this.canvas.width/2 - 10, this.imgY - this.canvas.height/2 - 10, this.imgWidth + 20, this.imgHeight + 20);
+        ctx.stroke();
+      }
+      ctx.drawImage(this.img, this.imgX - this.canvas.width/2, this.imgY - this.canvas.height/2, this.imgWidth, this.imgHeight);
+      
+    }
+    else
+    {
+      if (this.foreClicked)
+      {
+        ctx.beginPath();
+        ctx.lineWidth = 5;
+        ctx.strokeStyle = "lightblue";
+        ctx.rect(this.imgX + 10, this.imgY + 10, this.imgWidth - 20, this.imgHeight - 20);
+        ctx.stroke();
+      }
+      ctx.drawImage(this.img, this.imgX, this.imgY, this.imgWidth, this.imgHeight);
 
-    console.log(-this.img.width / 2)
-    console.log(-this.img.height / 2)
+      this.startUp = true;
 
-    // Draw the image
-    ctx.drawImage(this.img, -this.img.width / 2, -this.img.height / 2);
+    }
 
-    // Restore the context state
+    
     ctx.restore();
   }
 }
@@ -237,87 +221,15 @@ if (this.foreClicked)
 private onMouseDown(event: MouseEvent) {
 
   this.isDragging = true;
-  this.dragStartX = event.clientX;
-  this.dragStartY = event.clientY;
-
-  // if (this.imgX < 0)
-  // {
-  //   this.imgX=this.imgX*-1
-  // }
-
-  // if (this.imgY < 0)
-  // {
-  //   this.imgY=this.imgY*-1
-  // }
-
-
-  // console.log(event.offsetX )
-  // console.log(this.imgX)
-  // console.log(this.imgX+ this.img.width)
-  
-
-  // console.log(event.offsetY )
-  // console.log(this.imgY)
-  // console.log(this.imgY + this.img.height)
-
-
-
-  // if (event.offsetX >= this.imgX &&
-  //     event.offsetX <= this.imgX + this.img.width &&
-  //     event.offsetY >= this.imgY  &&
-  //     event.offsetY <= this.imgY + this.img.height) {
-  //   this.isDragging = true;
-  //   this.dragStartX = event.clientX;
-  //   this.dragStartY = event.clientY;
-  //   console.log(this.isDragging )
-
-
-
-  // }
-
-  this.b4dragStartX = event.clientX;
-  this.b4dragStartY = event.clientY;
-  
-
-
-
-
-//   if (event.offsetX >= this.imgX && event.offsetX <= this.imgX + this.imgWidth && event.clientY>= this.imgY && event.clientY <= this.imgY + this.imgHeight) {
-//     this.isDragging = true;
-//     this.isResizing = false;
-//     this.dragStartX = event.clientX;
-//     this.dragStartY = event.clientY;
-// }
-// else if (event.offsetX >= this.imgX + this.imgWidth - 10 && event.offsetX <= this.imgX + this.imgWidth && event.clientY>= this.imgY + this.imgHeight - 10 && event.clientY <= this.imgY + this.imgHeight) {
-//   this.isResizing = true;
-//   this.isDragging = false;
-// }
-
-
-
 }
 
 private onMouseUp(event: MouseEvent) {
   this.isDragging = false;
   this.isResizing = false;
 
+  console.log(this.releasePrevX + ' ' + event.offsetX + ' ' + this.releasePrevY + ' ' + event.offsetY)
 
-  this.imgX = event.offsetX ;
-  this.imgY = event.offsetY ;
-
-
-  console.log(event.offsetX )
-  console.log(this.imgX)
-  
-
-  console.log(event.offsetY )
-  console.log(this.imgY)
-
-
-
-  console.log(this.b4dragStartX + ' ' + event.clientX)
-
-  if ((this.b4dragStartX != event.clientX) || (this.b4dragStartY != event.clientY))
+  if ((this.releasePrevX != event.offsetX) || (this.releasePrevY != event.offsetY))
   {
     this.coordinatesChanged = true
     // this.foreClicked = true;
@@ -326,55 +238,44 @@ private onMouseUp(event: MouseEvent) {
     this.coordinatesChanged = false
   }
 
-
-
-if (this.foreClicked == false && this.coordinatesChanged == false)
-{
-  this.foreClicked = true
-}
-else if (this.foreClicked == true && this.coordinatesChanged == false)
-{
-  this.foreClicked = false
-}
-
-
-console.log(this.foreClicked )
-
+  if (this.foreClicked == false && this.coordinatesChanged == false)
+  {
+    this.foreClicked = true
+  }
+  else if (this.foreClicked == true && this.coordinatesChanged == false)
+  {
+    this.foreClicked = false
+  }
 
   this.draw();
-
-
-
-
+  this.releasePrevX = event.offsetX;
+  this.releasePrevY = event.offsetY;
   this.coordinatesChanged = false;
-
-
 }
 
 private onMouseMove(event: MouseEvent) {
   if (this.isDragging && !this.foreClicked) {
-    const deltaX = event.clientX - this.dragStartX;
-    const deltaY = event.clientY - this.dragStartY;
 
-    this.dragStartX = event.clientX;
-    this.dragStartY = event.clientY;
-
-    this.translateX += deltaX / this.scaleFactor;
-    this.translateY += deltaY / this.scaleFactor;
+      var deltaX = event.offsetX - this.prevX;
+      var deltaY = event.offsetY - this.prevY;
+      this.imgX += deltaX;
+      this.imgY += deltaY;
+      this.prevX = event.offsetX;
+      this.prevY = event.offsetY;
 
       this.draw();
     }
 
     if (this.foreClicked) {
-        // this.imgWidth = event.clientX - this.dragStartX;
-        // this.imgHeight = event.clientY - this.dragStartY;
 
+      this.imgWidth = event.offsetX - this.imgX;
+      this.imgHeight = event.offsetY - this.imgY;
 
-
-        this.draw();
+      this.draw();
         
     }
-    }
+
+  }
 
 
 
@@ -382,6 +283,51 @@ private onMouseMove(event: MouseEvent) {
     handleCanvasClick(event: MouseEvent) {
 
     }
+
+
+
+    handleDownloadClick(event: MouseEvent) {
+
+      var c = <HTMLCanvasElement> document.getElementById('canvas');
+
+      if (c)
+      {
+        var ctx = c.getContext("2d");
+
+        if (ctx)
+        {
+          ctx.clearRect(0, 0, 800, 800);
+      
+          var img3 = new Image();
+          img3.crossOrigin = 'Anonymous';
+          img3.src = this.BGimage;
+          img3.onload = () => {
+
+            if (ctx){
+
+              ctx.drawImage(img3, 0, 0);
+            }  
+          };
+            if (ctx)
+            {
+            
+              var img2 = new Image();
+              img2.crossOrigin = 'Anonymous';
+              img2.src = this.FGimage
+              img2.onload = () => {
+                if (ctx){
+                
+                  ctx.drawImage(img2, this.imgX, this.imgY, this.imgWidth, this.imgHeight)
+                }             
+              };
+
+              const link = document.createElement('a');
+              link.download = 'download.png';
+              link.href = this.canvas.toDataURL('image/png');
+              link.click();
+          }
+        
+        }
+      }
+    }
   }
-
-

@@ -22,7 +22,6 @@ h4 {
   font-size: 13px;
   font-weight: 700;
   letter-spacing: 2px;
-  text-transform: uppercase;
   line-height: 2;
 }
 
@@ -52,7 +51,6 @@ li {
   font-weight: 400;
   letter-spacing: 2px;
   line-height: 30px;
-  text-transform: capitalize;
 }
 
 p {
@@ -80,7 +78,6 @@ span {
   font-size: 11px;
   font-weight: 600;
   padding: 15px 40px;
-  text-transform: uppercase;
   transition: all 0.5s ease-in-out 0s;
 }
 
@@ -149,7 +146,6 @@ section {
   font-weight: 100;
   letter-spacing: 2px;
   margin-bottom: 20px;
-  text-transform: capitalize;
 }
 
 .section-title .separator {
@@ -162,7 +158,6 @@ section {
   font-size: 15px;
   font-weight: 300;
   margin-bottom: 30px;
-  text-transform: capitalize;
 }
 
 
@@ -183,13 +178,11 @@ section {
   font-weight: 100;
   letter-spacing: 2px;
   margin-bottom: 20px;
-  text-transform: capitalize;
 }
 
 #about-us .about-content span {
   font-weight: 700;
   padding-right: 10px;
-  text-transform: uppercase;
 }
 
 #about-us .about-content ul li {

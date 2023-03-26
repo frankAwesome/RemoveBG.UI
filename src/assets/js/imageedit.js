@@ -108,6 +108,8 @@ canvas.addEventListener("mousemove", function(e) {
         prevY = e.offsetY;
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         ctx.drawImage(img, imgX, imgY, imgWidth, imgHeight);
+
+        
     }
 });
 
