@@ -14,9 +14,9 @@ import { NgxSpinnerModule } from 'ngx-spinner';
 import { NgParticlesModule } from "ng-particles";
 import { EditimageComponent } from './pages/editimage/editimage.component';
 import { UploadcomponentComponent } from './components/uploadcomponent/uploadcomponent.component';
-import { DonateComponent } from './pages/donate/donate.component';
 import { AngularFireModule } from '@angular/fire/compat';
 import { environment } from './firebase/environment';
+import { AboutComponent } from './pages/about/about.component';
 
 
 interface NgxSpinnerConfig {
@@ -29,7 +29,7 @@ interface NgxSpinnerConfig {
     SpinnerComponent,
     EditimageComponent,
     UploadcomponentComponent,
-    DonateComponent
+    AboutComponent
   ],
   imports: [
     BrowserModule,

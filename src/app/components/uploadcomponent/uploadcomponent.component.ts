@@ -7,6 +7,8 @@ import { MoveDirection, ClickMode, HoverMode, OutMode, Container, Engine } from 
 import { loadFull } from "tsparticles";
 
 import { AngularFireDatabase, AngularFireDatabaseModule } from '@angular/fire/compat/database';
+import { ForegroundService } from 'src/app/services/foreground.service';
+import { Router } from '@angular/router';
 
 
 
@@ -21,7 +23,7 @@ export class UploadcomponentComponent{
 
 
 
-  constructor(private http: HttpClient, private spinner: NgxSpinnerService, private db: AngularFireDatabase)
+  constructor(private http: HttpClient, private spinner: NgxSpinnerService, private db: AngularFireDatabase, private myService: ForegroundService, private router: Router)
   {
   }
 
@@ -65,10 +67,17 @@ export class UploadcomponentComponent{
 
         const base64Image = e.target.result.toString().split(',')[1];
         this.http.post<any>(`http://localhost:5000/removebg`, base64Image ).subscribe((response: any) => {
-          console.log(response);
+          //this.myService.myString = 'data:image/jpeg;base64,' + response.image;
+          this.myService.changeMessage('data:image/jpeg;base64,' + response.image);
+          //console.log(this.myService.myString);
+          (window as any).myGlobalForeground = 'data:image/jpeg;base64,' + response.image;
           this.imageList.push('data:image/jpeg;base64,' + response.image);
 
+          
+
           this.spinner.hide();
+          this.myService.changeMessage('data:image/jpeg;base64,' + response.image);
+          this.router.navigate(['/imageedit']);
         });
       };
       reader.readAsDataURL(file)
