@@ -1,6 +1,8 @@
 import { style } from '@angular/animations';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
+import { Subscription } from 'rxjs';
+import { ForegroundService } from 'src/app/services/foreground.service';
 import { Background } from 'tsparticles-engine';
 
 @Component({
@@ -11,6 +13,8 @@ import { Background } from 'tsparticles-engine';
 export class EditimageComponent implements OnInit {
 
   fileToUpload: File | null = null;
+
+  subscription: Subscription;
 
   BGimage = '';
   FGimage = '';
@@ -47,12 +51,16 @@ export class EditimageComponent implements OnInit {
   foreClicked = false;
   coordinatesChanged = false;
 
-  constructor(private domSanitizer: DomSanitizer) {
+  constructor(private domSanitizer: DomSanitizer, private myService: ForegroundService) {
     this.canvas = <HTMLCanvasElement> document.getElementById('canvas');
+
+    this.subscription = this.myService.currentMessage.subscribe(message => this.FGimage = message)
     //
    }
 
   ngOnInit(): void {
+    
+
     this.canvas = <HTMLCanvasElement> document.getElementById('canvas');
     if (this.canvas) {
       var ctx = this.canvas.getContext('2d');
@@ -61,18 +69,19 @@ export class EditimageComponent implements OnInit {
 
 
         this.BGimage = "../../assets/img/bmw.jpg";
-        this.FGimage = "../../assets/img/image2.png";
+        //this.FGimage = "../../assets/img/image2.png";
+
+        this.subscription = this.myService.currentMessage.subscribe(message => this.FGimage = message);
+
+        //this.FGimage = (window as any).myGlobalVar;
+
+        //this.FGimage = this.myService.myString;
+        console.log(this.FGimage);
 
         this.base64Image = this.FGimage;
-
-
         this.canvas.setAttribute('style', "background: url(\'" + "../../assets/img/bmw.jpg" + "\'); background-repeat: no-repeat; background-size: 100% 100%;");
-
         this.img.crossOrigin = 'Anonymous';
-
         this.img.src = this.FGimage;
-
-
 
         this.img.onload = () => {
           // Draw the image on the canvas
@@ -81,10 +90,8 @@ export class EditimageComponent implements OnInit {
           this.imgWidth = this.img.width/this.imgRatio;
           this.imgHeight = this.img.height/this.imgRatio;
 
-
           this.draw();
           
-  
           this.canvas.addEventListener('mousedown', this.onMouseDown.bind(this));
           this.canvas.addEventListener('mouseup', this.onMouseUp.bind(this));
           this.canvas.addEventListener('mousemove', this.onMouseMove.bind(this));
