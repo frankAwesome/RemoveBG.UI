@@ -10,6 +10,7 @@ import { Background } from 'tsparticles-engine';
   templateUrl: './editimage.component.html',
   styleUrls: ['./editimage.component.sass']
 })
+
 export class EditimageComponent implements OnInit {
 
   fileToUpload: File | null = null;
@@ -39,6 +40,19 @@ export class EditimageComponent implements OnInit {
   releasePrevY = 0;
 
 
+  // foreground image properties
+  private foregroundimage = new Image;
+  private foregroundimageX: number = 0;
+  private foregroundimageY: number = 0;
+  private foregroundimageW: number = 0;
+  private foregroundimageH: number = 0;
+
+
+  //browser window properties
+  private browserwindowW: number = 0;
+  private browserwindowH: number = 0;
+
+
   startUp = false;
 
   imgRatio = 3;
@@ -55,8 +69,8 @@ export class EditimageComponent implements OnInit {
     this.canvas = <HTMLCanvasElement> document.getElementById('canvas');
 
     this.subscription = this.myService.currentMessage.subscribe(message => this.FGimage = message)
-    //
    }
+
 
   ngOnInit(): void {
     
@@ -76,7 +90,7 @@ export class EditimageComponent implements OnInit {
         //this.FGimage = (window as any).myGlobalVar;
 
         //this.FGimage = this.myService.myString;
-        console.log(this.FGimage);
+        //console.log(this.FGimage);
 
         this.base64Image = this.FGimage;
         this.canvas.setAttribute('style', "background: url(\'" + "../../assets/img/bmw.jpg" + "\'); background-repeat: no-repeat; background-size: 100% 100%;");
@@ -90,23 +104,35 @@ export class EditimageComponent implements OnInit {
           this.imgWidth = this.img.width/this.imgRatio;
           this.imgHeight = this.img.height/this.imgRatio;
 
+           //set foreground image properties
+          this.foregroundimage = this.img;
+          this.foregroundimageX = this.imgX;
+          this.foregroundimageY = this.imgY;
+          this.foregroundimageW = this.imgWidth;
+          this.foregroundimageH = this.imgHeight;
+
           this.draw();
           
           this.canvas.addEventListener('mousedown', this.onMouseDown.bind(this));
           this.canvas.addEventListener('mouseup', this.onMouseUp.bind(this));
           this.canvas.addEventListener('mousemove', this.onMouseMove.bind(this));
         }
-
-
       }
   }
+  }
 
-}
+
+
+ //------------------------------------------BACKGROUND IMAGE----------------------------------------------
 
   async handleBackground(event: any) {
 
       event.preventDefault();
       const file = event.dataTransfer.files[0];
+
+    //get browser window size for foreground image position
+    this.browserwindowW = window.innerWidth;
+    this.browserwindowH = window.innerHeight;
 
       const reader = new FileReader();
         reader.onload = (e: any) => {
@@ -131,23 +157,30 @@ export class EditimageComponent implements OnInit {
             this.img.onload = () => {
               this.foreClicked = false;
               this.coordinatesChanged = false;
-        
-              this.imgX = this.canvas.width/2 - this.img.width/2/this.imgRatio;
-              this.imgY = this.canvas.height/2 - this.img.height/2/this.imgRatio;
-              this.imgWidth = this.img.width/this.imgRatio;
-              this.imgHeight = this.img.height/this.imgRatio;
-              //this.startUp = false;
+
+              ////get from foreground image properties            
+              this.imgX = this.foregroundimageX;
+              this.imgY = this.foregroundimageY;
+
+              this.imgWidth = this.foregroundimageW ;
+              this.imgHeight = this.foregroundimageH;
+
+              //this.imgX = this.canvas.width / 2 + this.foregroundimageX + (this.browserwindowW - this.canvas.width);
+              //this.imgY = this.canvas.height / 2 + this.foregroundimageY + (this.browserwindowH - this.canvas.height);
+              this.foreClicked = false
+              this.startUp = false          
               this.draw();
-        
               this.startUp = true;
             }
-      
           }
         };
 
         reader.readAsDataURL(file);   
   }
 
+
+
+ //------------------------------------------FOREGROUND IMAGE----------------------------------------------
 
   async handleForeground(event: any) {
 
@@ -174,17 +207,28 @@ export class EditimageComponent implements OnInit {
       this.draw();
 
       this.startUp = true;
-
-
     }
+
+    //set foreground image properties
+    this.foregroundimage = this.img;
+    this.foregroundimageX = this.imgX;
+    this.foregroundimageY = this.imgY;
+    this.foregroundimageW = this.imgWidth;
+    this.foregroundimageH = this.imgHeight;
 
     };
     reader.readAsDataURL(file);
   }
 
+
   onDragOver(event: any) {
     event.preventDefault();
   }
+
+
+
+
+//------------------------------------------CANVAS EVENTS----------------------------------------------
 
   private draw() {
     var ctx = this.canvas.getContext('2d');
@@ -196,8 +240,6 @@ export class EditimageComponent implements OnInit {
     // ctx.scale(this.scaleFactor, this.scaleFactor);
     // ctx.translate(this.translateX, this.translateY);
 
-
-
     if (this.startUp)
     {
       if (this.foreClicked)
@@ -205,11 +247,11 @@ export class EditimageComponent implements OnInit {
         ctx.beginPath();
         ctx.lineWidth = 5;
         ctx.strokeStyle = "lightblue";
-        ctx.rect(this.imgX - this.canvas.width/2 - 10, this.imgY - this.canvas.height/2 - 10, this.imgWidth + 20, this.imgHeight + 20);
+        ctx.rect(this.imgX-10, this.imgY-10, this.imgWidth+20, this.imgHeight+20);
         ctx.stroke();
       }
-      ctx.drawImage(this.img, this.imgX - this.canvas.width/2, this.imgY - this.canvas.height/2, this.imgWidth, this.imgHeight);
-      
+
+      ctx.drawImage(this.img, this.imgX, this.imgY, this.imgWidth, this.imgHeight);
     }
     else
     {
@@ -221,34 +263,49 @@ export class EditimageComponent implements OnInit {
         ctx.rect(this.imgX + 10, this.imgY + 10, this.imgWidth - 20, this.imgHeight - 20);
         ctx.stroke();
       }
+
+      //CENTRE IMAGE AFTER UPLOAD
       this.imgX = this.canvas.width/2 - this.img.width/2/this.imgRatio;
-      this.imgY = this.canvas.height/2 - this.img.height/2/this.imgRatio;
+      this.imgY = this.canvas.height / 2 - this.img.height / 2 / this.imgRatio;
       ctx.drawImage(this.img, this.imgX, this.imgY, this.imgWidth, this.imgHeight);
 
       this.startUp = true;
-
     }
-
     
     ctx.restore();
   }
-}
+  }
+
+
+  handleCanvasClick(event: MouseEvent) {
+  }
+
+
+
+//------------------------------------------MOUSE EVENTS----------------------------------------------
 
 private onMouseDown(event: MouseEvent) {
 
-  this.isDragging = true;
+  //only enable when user clicks inside image
+  if (event.offsetX <= this.imgX + this.imgWidth && (event.offsetX >= this.imgX)) {
+    if (event.offsetY <= this.imgY + this.imgHeight && (event.offsetY >= this.imgY)) {
+      this.isDragging = true;
+    };
+  };
+
+  this.prevX = event.offsetX;
+  this.prevY = event.offsetY;
 }
+
+
 
 private onMouseUp(event: MouseEvent) {
   this.isDragging = false;
   this.isResizing = false;
 
-  console.log(this.releasePrevX + ' ' + event.offsetX + ' ' + this.releasePrevY + ' ' + event.offsetY)
-
   if ((this.releasePrevX != event.offsetX) || (this.releasePrevY != event.offsetY))
   {
     this.coordinatesChanged = true
-    // this.foreClicked = true;
   }
   else{
     this.coordinatesChanged = false
@@ -263,21 +320,29 @@ private onMouseUp(event: MouseEvent) {
     this.foreClicked = false
   }
 
+  this.prevX = event.offsetX;
+  this.prevY = event.offsetY;
+
   this.draw();
   this.releasePrevX = event.offsetX;
   this.releasePrevY = event.offsetY;
   this.coordinatesChanged = false;
+
 }
+
+
 
 private onMouseMove(event: MouseEvent) {
   if (this.isDragging && !this.foreClicked) {
 
-      var deltaX = event.offsetX - this.prevX;
-      var deltaY = event.offsetY - this.prevY;
-      this.imgX += deltaX;
-      this.imgY += deltaY;
-      this.prevX = event.offsetX;
-      this.prevY = event.offsetY;
+    var deltaX = event.offsetX - this.prevX;
+    var deltaY = event.offsetY - this.prevY;
+
+    this.imgX += deltaX;
+    this.imgY += deltaY;
+
+    this.prevX = event.offsetX;
+    this.prevY = event.offsetY;
 
       this.draw();
     }
@@ -288,16 +353,12 @@ private onMouseMove(event: MouseEvent) {
       this.imgHeight = event.offsetY;
 
       this.draw();
-        
     }
-
   }
 
-    handleCanvasClick(event: MouseEvent) {
-
-    }
 
 
+   //------------------------------------------DOWNLOADS----------------------------------------------
 
     handleDownloadClick(event: MouseEvent) {
 
@@ -343,11 +404,7 @@ private onMouseMove(event: MouseEvent) {
                 link.click();
               }             
             };
-
-
-          };
-
-        
+          };        
         }
       }
     }
@@ -378,13 +435,5 @@ private onMouseMove(event: MouseEvent) {
       
       // Release the URL object
       window.URL.revokeObjectURL(url);
-
-
-      
       };
-
-
-
-      
-    
   }
