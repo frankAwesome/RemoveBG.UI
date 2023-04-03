@@ -1,5 +1,4 @@
 
-
 <style>
     #canvas {
       background-repeat: no-repeat;
@@ -7,12 +6,55 @@
       background-size: cover;
       text-align: center;
       vertical-align: middle;
+      border-radius: 20px;
     }
+/* Add animation (fade in the popup) */
+@-webkit-keyframes fadeIn {
+  from {opacity: 0;} 
+  to {opacity: 1;}
+}
+
+@keyframes fadeIn {
+  from {opacity: 0;}
+  to {opacity:1 ;}
+}
   </style>
 
-<div class="hero-container" data-aos="fade-in">
+ <nav class="navbar navbar-expand-lg navbar-light bg-light" style="border-radius: 15px; margin-left: 20px; margin-right: 20px; margin-top: -470px; height: 60px;">
+  <div class="container-fluid">
+      <a class="logotext" href="index.html" style="margin-left: 30px;"></a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse justify-content-end" id="navbarText">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+              <li class="nav-item">
+                  <a class="nav-link" aria-current="page" href="/">remove bg</a>
+              </li>
+              <li class="nav-item">
+                  <a class="nav-link" href="/imageedit">edit bg</a>
+              </li>
+              <li class="nav-item">
+                  <a class="nav-link" href="/about">about</a>
+              </li>
+          </ul>
 
-<div class="drop-zone" (drop)="handleBackground($event)" (dragover)="onDragOver($event)" style="margin-top: -180px;">
+      <button [hidden]="hideElement" class="btn btn-success"  style="border-radius: 15px; margin: 15px;" crossorigin="anonymous" (click)="handleDownloadClick($event)">Download Image</button>
+      <br>
+      <button [hidden]="hideElement" class="btn btn-success"  style="border-radius: 15px;" crossorigin="anonymous" (click)="handleForegroundDownloadClick($event)">Download Foreground Image</button>
+
+          <!-- <span class="navbar-text">
+            Navbar text with an inline element
+          </span> -->
+
+          
+      </div>
+  </div>
+</nav>
+
+<div class="hero-container" data-aos="fade-in" style="margin-top: 200px;">
+
+<!-- <div class="drop-zone" (drop)="handleBackground($event)" (dragover)="onDragOver($event)" style="margin-top: -180px;">
     <p>drag and drop your background here</p>
   </div>
 
@@ -21,33 +63,45 @@
 
   <div class="drop-zone" (drop)="handleForeground($event)" (dragover)="onDragOver($event)" style="margin-top: -0px;">
     <p>drag and drop your foreground here</p>
-  </div>
+  </div> -->
 
   <br>
 
-  <div style="padding: 10px; background-color: #eee; border-radius: 15px;">
-    <canvas id="canvas" #canvas [width]="canvasWidth" [height]="canvasHeight" crossorigin="anonymous" (click)="handleCanvasClick($event)" (drop)="handleBackground($event)" (dragover)="onDragOver($event)"></canvas>
+  <div class="drop-zone">
+
+
+    <div style="padding: 10px; border-radius: 15px;">
+      <canvas id="canvas" #canvas [width]="canvasWidth" [height]="canvasHeight" crossorigin="anonymous" (click)="handleCanvasClick($event)" (drop)="handleBackground($event)" (dragover)="onDragOver($event)"></canvas>
+    </div>
+    <p>drag and drop a background image here</p>
   </div>
+
+
+
 
   
 
 <br>
 
+<div class="box" 
 
-<button class="btn btn-success"  style="border-radius: 20px;" crossorigin="anonymous" (click)="handleDownloadClick($event)">Download Image</button>
+  >
+    <!-- <button [hidden]="hideElement">more info</button> -->
+<!-- <button [hidden]="hideElement" class="btn btn-success"  style="border-radius: 20px;" crossorigin="anonymous" (click)="handleDownloadClick($event)">Download Image</button>
 <br>
-<button class="btn btn-success"  style="border-radius: 20px;" crossorigin="anonymous" (click)="handleForegroundDownloadClick($event)">Download Foreground Image</button>
-
+<button [hidden]="hideElement" class="btn btn-success"  style="border-radius: 20px;" crossorigin="anonymous" (click)="handleForegroundDownloadClick($event)">Download Foreground Image</button> -->
 
 </div>
 
 
 
 
+</div>
 
 
 
 <style>
+
     h1,
  h2,
  h3,
@@ -245,10 +299,10 @@
 
 
  .drop-zone {
- border: 2px dashed #ffffff;
- border-radius: 20px;
- width: 350px;
- height: 50px;
+ border: 1px dashed #ffffff;
+ border-radius: 40px;
+ width: 800px;
+ height: 600px;
  display: flex;
  flex-direction: column;
  align-items: center;
@@ -392,6 +446,5 @@
 }
 
 </style>
-
 
 
