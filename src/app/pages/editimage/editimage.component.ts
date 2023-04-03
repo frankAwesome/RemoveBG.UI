@@ -179,6 +179,8 @@ export class EditimageComponent implements OnInit {
           }
         };
 
+        console.log( this.backgroundBase64Image)
+
         reader.readAsDataURL(file);   
   }
 
@@ -392,84 +394,122 @@ if (this.isDragging ==false){
 
 
 
-
-
    //------------------------------------------DOWNLOADS----------------------------------------------
 
     handleDownloadClick(event: MouseEvent) {
 
-      var c = <HTMLCanvasElement> document.createElement('canvas');
+console.log( this.backgroundBase64Image)
 
-      if (c)
-      {
-        var ctx = c.getContext("2d");
+      if (this.backgroundBase64Image == '' || this.backgroundBase64Image == null){
 
-        if (ctx)
-        {
-      
-          var img3 = new Image();
-          img3.crossOrigin = 'Anonymous';
-          if (this.backgroundBase64Image != '')
-          {img3.src = this.backgroundBase64Image;}
-          else
-          {img3.src = '../../assets/img/bmw.jpg';}
-
-          img3.onload = () => {
-            c.height = img3.height;
-            c.width = img3.width;
-
-            if (ctx){
-              ctx.drawImage(img3, 0, 0);
-              // ctx.restore();
-              // ctx.save();
-            }  
-
-            var img2 = new Image();
-            img2.crossOrigin = 'Anonymous';
-            img2.src = this.base64Image;
-            img2.onload = () => {
-              if (ctx){
-                //console.log(img2.src)
-                ctx.drawImage(img2, this.imgX, this.imgY, this.imgWidth, this.imgHeight)
-                ctx.restore();
-                ctx.save();
-
-                const link = document.createElement('a');
-                link.download = 'download.png';
-                link.href = c.toDataURL('image/png');
-                link.click();
-              }             
-            };
-          };        
+console.log('!=')
+        const byteString = atob(this.base64Image.split(',')[1]);
+        const mimeString = this.base64Image.split(',')[0].split(':')[1].split(';')[0];
+        const ab = new ArrayBuffer(byteString.length);
+        const ia = new Uint8Array(ab);
+        for (let i = 0; i < byteString.length; i++) {
+            ia[i] = byteString.charCodeAt(i);
         }
+        const blob = new Blob([ab], { type: mimeString });
+  
+        // Create a URL for the blob
+        const url = window.URL.createObjectURL(blob);
+          
+        // Create an anchor element to download the image
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'image.png';
+        
+        // Click the anchor element to download the image
+        a.click();
+        
+        // Release the URL object
+        window.URL.revokeObjectURL(url);
+  
+        
       }
+      else
+      {
+
+        var c = <HTMLCanvasElement> document.createElement('canvas');
+
+        if (c)
+        {
+          var ctx = c.getContext("2d");
+  
+          if (ctx)
+          {
+      
+  
+            var img3 = new Image();
+            img3.crossOrigin = 'Anonymous';
+            if (this.backgroundBase64Image != '')
+            {img3.src = this.backgroundBase64Image;}
+            else
+            {img3.src = '../../assets/img/bmw.jpg';}
+  
+            img3.onload = () => {
+              c.height = img3.height;
+              c.width = img3.width;
+  
+              if (ctx){
+                ctx.drawImage(img3, 0, 0);
+                // ctx.restore();
+                // ctx.save();
+              }  
+  
+              var img2 = new Image();
+              img2.crossOrigin = 'Anonymous';
+              img2.src = this.base64Image;
+              img2.onload = () => {
+                if (ctx){
+                  //console.log(img2.src)
+                  ctx.drawImage(img2, this.imgX, this.imgY, this.imgWidth, this.imgHeight)
+                  ctx.restore();
+                  ctx.save();
+  
+                  const link = document.createElement('a');
+                  link.download = 'download.png';
+                  link.href = c.toDataURL('image/png');
+                  link.click();
+                }             
+              };
+            };        
+          }
+        }
+
+
+      }
+
+
+
     }
 
 
 
-    handleForegroundDownloadClick(event: MouseEvent) {
+    // handleForegroundDownloadClick(event: MouseEvent) {
 
-      const byteString = atob(this.base64Image.split(',')[1]);
-      const mimeString = this.base64Image.split(',')[0].split(':')[1].split(';')[0];
-      const ab = new ArrayBuffer(byteString.length);
-      const ia = new Uint8Array(ab);
-      for (let i = 0; i < byteString.length; i++) {
-          ia[i] = byteString.charCodeAt(i);
-      }
-      const blob = new Blob([ab], { type: mimeString });
+    //   const byteString = atob(this.base64Image.split(',')[1]);
+    //   const mimeString = this.base64Image.split(',')[0].split(':')[1].split(';')[0];
+    //   const ab = new ArrayBuffer(byteString.length);
+    //   const ia = new Uint8Array(ab);
+    //   for (let i = 0; i < byteString.length; i++) {
+    //       ia[i] = byteString.charCodeAt(i);
+    //   }
+    //   const blob = new Blob([ab], { type: mimeString });
 
-      // Create a URL for the blob
-      const url = window.URL.createObjectURL(blob);
+    //   // Create a URL for the blob
+    //   const url = window.URL.createObjectURL(blob);
         
-      // Create an anchor element to download the image
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'image.png';
+    //   // Create an anchor element to download the image
+    //   const a = document.createElement('a');
+    //   a.href = url;
+    //   a.download = 'image.png';
       
-      // Click the anchor element to download the image
-      a.click();
+    //   // Click the anchor element to download the image
+    //   a.click();
       
-      // Release the URL object
-      window.URL.revokeObjectURL(url);
-      };
+    //   // Release the URL object
+    //   window.URL.revokeObjectURL(url);
+    //   };
   }

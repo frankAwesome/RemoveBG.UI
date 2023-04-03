@@ -39,9 +39,9 @@
               </li>
           </ul>
 
-      <button [hidden]="hideElement" class="btn btn-success"  style="border-radius: 15px; margin: 15px;" crossorigin="anonymous" (click)="handleDownloadClick($event)">Download Image</button>
-      <br>
-      <button [hidden]="hideElement" class="btn btn-success"  style="border-radius: 15px;" crossorigin="anonymous" (click)="handleForegroundDownloadClick($event)">Download Foreground Image</button>
+      <button [hidden]="hideElement" class="btn btn-primary"  style="border-radius: 15px; margin: 15px;" crossorigin="anonymous" (click)="handleDownloadClick($event)">Download Image</button>
+      <!-- <br>
+      <button [hidden]="hideElement" class="btn btn-success"  style="border-radius: 15px;" crossorigin="anonymous" (click)="handleForegroundDownloadClick($event)">Download Foreground Image</button> -->
 
           <!-- <span class="navbar-text">
             Navbar text with an inline element
@@ -66,14 +66,12 @@
   </div> -->
 
   <br>
-
+  
   <div class="drop-zone">
-
-
     <div style="padding: 10px; border-radius: 15px;">
       <canvas id="canvas" #canvas [width]="canvasWidth" [height]="canvasHeight" crossorigin="anonymous" (click)="handleCanvasClick($event)" (drop)="handleBackground($event)" (dragover)="onDragOver($event)"></canvas>
     </div>
-    <p>drag and drop a background image here</p>
+    <p class="droptext">drag and drop a background image here</p>
   </div>
 
 
@@ -111,9 +109,15 @@
    margin: 8px 0;
  }
 
- p {
+ /* p {
    margin: 0;
- }
+ } */
+
+ .droptext {
+  font-size: 24px;
+ color: #ffffff;
+ text-align: center;
+}
 
  .spacer {
    flex: 1;
@@ -310,11 +314,11 @@
  cursor: pointer;
 }
 
-.drop-zone p {
+/* .drop-zone p {
  font-size: 14px;
  color: #ffffff;
  text-align: center;
-}
+} */
 
 .image-gallery {
  display: flex;
