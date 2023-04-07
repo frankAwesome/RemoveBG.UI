@@ -1,9 +1,9 @@
-import { style } from '@angular/animations';
+// import { style } from '@angular/animations';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Subscription } from 'rxjs';
 import { ForegroundService } from 'src/app/services/foreground.service';
-import { Background } from 'tsparticles-engine';
+// import { Background } from 'tsparticles-engine';
 
 @Component({
   selector: 'app-editimage',
@@ -52,6 +52,8 @@ export class EditimageComponent implements OnInit {
   private browserwindowW: number = 0;
   private browserwindowH: number = 0;
 
+  //show/hide download buttons
+  hideElement = false;
 
   startUp = false;
 
@@ -93,7 +95,9 @@ export class EditimageComponent implements OnInit {
         //console.log(this.FGimage);
 
         this.base64Image = this.FGimage;
-        this.canvas.setAttribute('style', "background: url(\'" + "../../assets/img/bmw.jpg" + "\'); background-repeat: no-repeat; background-size: 100% 100%;");
+        // this.canvas.setAttribute('style', "background: url(\'" + "../../assets/img/bmw.jpg" + "\'); background-repeat: no-repeat; background-size: 100% 100%;");
+        // this.canvas.setAttribute('style', "background: transparent; background-repeat: no-repeat; background-size: 100% 100%;");
+
         this.img.crossOrigin = 'Anonymous';
         this.img.src = this.FGimage;
 
@@ -111,7 +115,7 @@ export class EditimageComponent implements OnInit {
           this.foregroundimageW = this.imgWidth;
           this.foregroundimageH = this.imgHeight;
 
-          this.draw();
+          this.draw(0);
           
           this.canvas.addEventListener('mousedown', this.onMouseDown.bind(this));
           this.canvas.addEventListener('mouseup', this.onMouseUp.bind(this));
@@ -169,11 +173,13 @@ export class EditimageComponent implements OnInit {
               //this.imgY = this.canvas.height / 2 + this.foregroundimageY + (this.browserwindowH - this.canvas.height);
               this.foreClicked = false
               this.startUp = false          
-              this.draw();
+              this.draw(0);
               this.startUp = true;
             }
           }
         };
+
+        console.log( this.backgroundBase64Image)
 
         reader.readAsDataURL(file);   
   }
@@ -204,7 +210,7 @@ export class EditimageComponent implements OnInit {
       this.imgWidth = this.img.width/this.imgRatio;
       this.imgHeight = this.img.height/this.imgRatio;
       this.startUp = false;
-      this.draw();
+      this.draw(0);
 
       this.startUp = true;
     }
@@ -226,11 +232,9 @@ export class EditimageComponent implements OnInit {
   }
 
 
-
-
 //------------------------------------------CANVAS EVENTS----------------------------------------------
 
-  private draw() {
+  private draw(degrees: number) {
     var ctx = this.canvas.getContext('2d');
 
     if (ctx){
@@ -264,6 +268,16 @@ export class EditimageComponent implements OnInit {
         ctx.stroke();
       }
 
+      //FIX
+      // if (degrees!=0){
+      //   // rotate the canvas to the specified degrees
+      //   ctx.setTransform(1, 0, 0, 1, x, y); // sets scale and origin
+      //   ctx.rotate(degrees*Math.PI/180);
+      // }
+      // else {
+        
+      // }
+
       //CENTRE IMAGE AFTER UPLOAD
       this.imgX = this.canvas.width/2 - this.img.width/2/this.imgRatio;
       this.imgY = this.canvas.height / 2 - this.img.height / 2 / this.imgRatio;
@@ -275,7 +289,6 @@ export class EditimageComponent implements OnInit {
     ctx.restore();
   }
   }
-
 
   handleCanvasClick(event: MouseEvent) {
   }
@@ -290,7 +303,12 @@ private onMouseDown(event: MouseEvent) {
   if (event.offsetX <= this.imgX + this.imgWidth && (event.offsetX >= this.imgX)) {
     if (event.offsetY <= this.imgY + this.imgHeight && (event.offsetY >= this.imgY)) {
       this.isDragging = true;
+    }
+    else{
+      this.isDragging = false;
     };
+  }else{
+    this.isDragging = false;
   };
 
   this.prevX = event.offsetX;
@@ -323,7 +341,7 @@ private onMouseUp(event: MouseEvent) {
   this.prevX = event.offsetX;
   this.prevY = event.offsetY;
 
-  this.draw();
+  this.draw(0);
   this.releasePrevX = event.offsetX;
   this.releasePrevY = event.offsetY;
   this.coordinatesChanged = false;
@@ -333,6 +351,22 @@ private onMouseUp(event: MouseEvent) {
 
 
 private onMouseMove(event: MouseEvent) {
+
+//Check if user is moving the mouse on the image
+if (this.isDragging ==false){
+ if (event.offsetX <= this.imgX + this.imgWidth && (event.offsetX >= this.imgX)) {
+  if (event.offsetY <= this.imgY + this.imgHeight && (event.offsetY >= this.imgY)) {
+    
+      // console.log('show popup')
+      this.hideElement = false;
+     };
+ };
+
+}
+
+
+
+
   if (this.isDragging && !this.foreClicked) {
 
     var deltaX = event.offsetX - this.prevX;
@@ -344,7 +378,7 @@ private onMouseMove(event: MouseEvent) {
     this.prevX = event.offsetX;
     this.prevY = event.offsetY;
 
-      this.draw();
+      this.draw(0);
     }
 
     if (this.foreClicked) {
@@ -352,9 +386,11 @@ private onMouseMove(event: MouseEvent) {
       this.imgWidth = event.offsetX;
       this.imgHeight = event.offsetY;
 
-      this.draw();
+      this.draw(0);
     }
   }
+
+
 
 
 
@@ -362,78 +398,118 @@ private onMouseMove(event: MouseEvent) {
 
     handleDownloadClick(event: MouseEvent) {
 
-      var c = <HTMLCanvasElement> document.createElement('canvas');
+console.log( this.backgroundBase64Image)
 
-      if (c)
-      {
-        var ctx = c.getContext("2d");
+      if (this.backgroundBase64Image == '' || this.backgroundBase64Image == null){
 
-        if (ctx)
-        {
-      
-          var img3 = new Image();
-          img3.crossOrigin = 'Anonymous';
-          if (this.backgroundBase64Image != '')
-          {img3.src = this.backgroundBase64Image;}
-          else
-          {img3.src = '../../assets/img/bmw.jpg';}
-
-          img3.onload = () => {
-            c.height = img3.height;
-            c.width = img3.width;
-
-            if (ctx){
-              ctx.drawImage(img3, 0, 0);
-              // ctx.restore();
-              // ctx.save();
-            }  
-
-            var img2 = new Image();
-            img2.crossOrigin = 'Anonymous';
-            img2.src = this.base64Image;
-            img2.onload = () => {
-              if (ctx){
-                //console.log(img2.src)
-                ctx.drawImage(img2, this.imgX - this.canvas.width/2, this.imgY - this.canvas.height/2, this.imgWidth, this.imgHeight)
-                ctx.restore();
-                ctx.save();
-
-                const link = document.createElement('a');
-                link.download = 'download.png';
-                link.href = c.toDataURL('image/png');
-                link.click();
-              }             
-            };
-          };        
+console.log('!=')
+        const byteString = atob(this.base64Image.split(',')[1]);
+        const mimeString = this.base64Image.split(',')[0].split(':')[1].split(';')[0];
+        const ab = new ArrayBuffer(byteString.length);
+        const ia = new Uint8Array(ab);
+        for (let i = 0; i < byteString.length; i++) {
+            ia[i] = byteString.charCodeAt(i);
         }
+        const blob = new Blob([ab], { type: mimeString });
+  
+        // Create a URL for the blob
+        const url = window.URL.createObjectURL(blob);
+          
+        // Create an anchor element to download the image
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'image.png';
+        
+        // Click the anchor element to download the image
+        a.click();
+        
+        // Release the URL object
+        window.URL.revokeObjectURL(url);
+  
+        
       }
+      else
+      {
+
+        var c = <HTMLCanvasElement> document.createElement('canvas');
+
+        if (c)
+        {
+          var ctx = c.getContext("2d");
+  
+          if (ctx)
+          {
+      
+  
+            var img3 = new Image();
+            img3.crossOrigin = 'Anonymous';
+            if (this.backgroundBase64Image != '')
+            {img3.src = this.backgroundBase64Image;}
+            else
+            {img3.src = '../../assets/img/bmw.jpg';}
+  
+            img3.onload = () => {
+              c.height = img3.height;
+              c.width = img3.width;
+  
+              if (ctx){
+                ctx.drawImage(img3, 0, 0);
+                // ctx.restore();
+                // ctx.save();
+              }  
+  
+              var img2 = new Image();
+              img2.crossOrigin = 'Anonymous';
+              img2.src = this.base64Image;
+              img2.onload = () => {
+                if (ctx){
+                  //console.log(img2.src)
+                  ctx.drawImage(img2, this.imgX, this.imgY, this.imgWidth, this.imgHeight)
+                  ctx.restore();
+                  ctx.save();
+  
+                  const link = document.createElement('a');
+                  link.download = 'download.png';
+                  link.href = c.toDataURL('image/png');
+                  link.click();
+                }             
+              };
+            };        
+          }
+        }
+
+
+      }
+
+
+
     }
 
 
 
-    handleForegroundDownloadClick(event: MouseEvent) {
+    // handleForegroundDownloadClick(event: MouseEvent) {
 
-      const byteString = atob(this.base64Image.split(',')[1]);
-      const mimeString = this.base64Image.split(',')[0].split(':')[1].split(';')[0];
-      const ab = new ArrayBuffer(byteString.length);
-      const ia = new Uint8Array(ab);
-      for (let i = 0; i < byteString.length; i++) {
-          ia[i] = byteString.charCodeAt(i);
-      }
-      const blob = new Blob([ab], { type: mimeString });
+    //   const byteString = atob(this.base64Image.split(',')[1]);
+    //   const mimeString = this.base64Image.split(',')[0].split(':')[1].split(';')[0];
+    //   const ab = new ArrayBuffer(byteString.length);
+    //   const ia = new Uint8Array(ab);
+    //   for (let i = 0; i < byteString.length; i++) {
+    //       ia[i] = byteString.charCodeAt(i);
+    //   }
+    //   const blob = new Blob([ab], { type: mimeString });
 
-      // Create a URL for the blob
-      const url = window.URL.createObjectURL(blob);
+    //   // Create a URL for the blob
+    //   const url = window.URL.createObjectURL(blob);
         
-      // Create an anchor element to download the image
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'image.png';
+    //   // Create an anchor element to download the image
+    //   const a = document.createElement('a');
+    //   a.href = url;
+    //   a.download = 'image.png';
       
-      // Click the anchor element to download the image
-      a.click();
+    //   // Click the anchor element to download the image
+    //   a.click();
       
-      // Release the URL object
-      window.URL.revokeObjectURL(url);
-      };
+    //   // Release the URL object
+    //   window.URL.revokeObjectURL(url);
+    //   };
   }
