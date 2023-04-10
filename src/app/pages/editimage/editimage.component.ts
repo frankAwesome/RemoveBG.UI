@@ -512,4 +512,15 @@ console.log('!=')
     //   // Release the URL object
     //   window.URL.revokeObjectURL(url);
     //   };
+
+
+    downloadImage(image: string) {
+      const link = document.createElement('a');
+      link.setAttribute('href', image);
+      link.setAttribute('download', 'image.png');
+      link.style.display = 'none';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
   }

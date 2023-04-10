@@ -24,9 +24,29 @@
   color: #ffffff;
   text-align: center;
 }
+
+
+
+@media (max-width: 575.98px) {
+  .HideOnMobile {
+    visibility: hidden;
+  }
+  .ShowOnMobile {
+    visibility: visible;
+  }
+}
+
+@media (min-width: 576px) {
+  .HideOnMobile {
+    visibility: visible;
+  }
+  .ShowOnMobile {
+    visibility: hidden;
+  }
+}
   </style>
 
- <nav class="navbar navbar-expand-lg navbar-light bg-light" style="border-radius: 25px; margin-top: 20px; margin-left: 20px; margin-right: 20px; height: 60px;">
+ <nav class="navbar navbar-expand-lg navbar-light bg-light HideOnMobile" style="border-radius: 25px; margin-top: 20px; margin-left: 20px; margin-right: 20px; height: 60px;">
   <a href="#" class="navbar-brand">
     <img src="../assets/img/logo.png" height="60">
 </a>
@@ -54,23 +74,77 @@
   </div>
 </nav>
 
+<nav class="navbar navbar-expand-lg navbar-light bg-light ShowOnMobile" style="border-radius: 25px; margin-top: 20px; margin-left: 20px; margin-right: 20px; height: 60px;">
+
+  <div class="container-fluid">
+    <a href="#" class="" style="margin-top: -5px; margin-left: -20px;">
+      <img src="../assets/img/logo.png" height="60">
+  </a>
+      <button style="margin-top: -10px;" class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse justify-content-end" id="navbarText">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+              <li class="nav-item">
+                  <a class="nav-link" aria-current="page" href="/">remove bg</a>
+              </li>
+              <li class="nav-item">
+                  <a class="nav-link" href="/imageedit">edit bg</a>
+              </li>
+              <li class="nav-item">
+                  <a class="nav-link" href="/about">about</a>
+              </li>
+          </ul>
+          
+      </div>
+  </div>
+</nav>
+
 <div class="content3">
 
   <br>
   
-  <div class="drop-zone">
+  <div class="drop-zone HideOnMobile">
     <div style="padding: 10px; border-radius: 15px;">
       <canvas id="canvas" #canvas [width]="canvasWidth" [height]="canvasHeight" crossorigin="anonymous" (click)="handleCanvasClick($event)" (drop)="handleBackground($event)" (dragover)="onDragOver($event)"></canvas>
     </div>
     <br>
     <p class="droptext">drag and drop a background image above</p>
   </div>
+
+
+</div>
+
+
+
+
+
+<div class="image-gallery ShowOnMobile" style="margin-top: 20px;">
+    <div class="image-container card">
+      
+      <img [src]="base64Image" alt="Uploaded image" class="image-gallery2">
+      <button style="margin-top: 20px;" type="button" class="btn btn-primary" (click)="downloadImage(base64Image)">Download</button>
+    </div>
+
 </div>
 
 
 
 <style>
 
+  .image-gallery{
+ border-radius: 40px;
+ display: flex;
+ flex-direction: column;
+ align-items: center;
+ justify-content: center;
+ cursor: pointer;
+  }
+
+  .image-gallery2{
+ width: 300px;
+ border-radius: 10px;
+  }
 
  .drop-zone {
  border: 1px dashed #ffffff;
@@ -85,33 +159,6 @@
 }
 
 
-.overlay {
- position: absolute;
- top: 0;
- left: 0;
- width: 100%;
- height: 100%;
- opacity: 0;
- transition: opacity 0.3s ease;
- background-color: rgba(255, 255, 255, 0.5);
- display: flex;
- justify-content: center;
- align-items: center;
-}
-
-.overlay a {
- color: #fff;
- text-transform: uppercase;
- text-decoration: none;
- border: 2px solid #fff;
- padding: 10px 20px;
- transition: all 0.3s ease;
-}
-
-.overlay a:hover {
- background-color: #fff;
- color: #000;
-}
 
 .image-container:hover img {
  opacity: 0.5;
@@ -124,28 +171,6 @@
 
 
 
-
-
-.buttondownload {
- border-color: white;
- display: inline-block;
- padding: 12px 24px;
- border-radius: 30px;
- background-color: #fff;
- color: #2590b0;
- font-size: 16px;
- font-weight: bold;
- text-align: center;
- text-decoration: none;
- box-shadow: 4px 4px 4px 4px rgba(203, 214, 203, 0.4);
- transition: all 0.3s ease;
- 
-}
-
-.buttondownload:hover {
- background-color: #ffffff;
- color: #1951d5;
-}
 
 </style>
 
