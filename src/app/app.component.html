@@ -1,209 +1,41 @@
 
 
+
+<ng-particles [id]="id"
+[url]="particlesUrl"
+[particlesInit]="particlesInit"
+(particlesLoaded)="particlesLoaded($event)"
+>
+
+
+
+</ng-particles>
+
+
+
+<div class="content2">
+  <router-outlet>
+
+  </router-outlet>
+</div>
+
+
+
+
+
+
+
+
+<div *ngIf="isLoading">
+<ngx-spinner type="ball-scale-multiple"></ngx-spinner>
+</div>
+
+
+
 <style>
-  :host {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-    font-size: 14px;
-    color: #333;
-    box-sizing: border-box;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-  }
 
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
-    margin: 8px 0;
-  }
+  
 
-  p {
-    margin: 0;
-  }
-
-  .spacer {
-    flex: 1;
-  }
-
-  .toolbar {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 60px;
-    display: flex;
-    align-items: center;
-    background-color: #35b072;
-    color: white;
-    font-weight: 600;
-  }
-
-  .toolbar img {
-    margin: 0 16px;
-  }
-
-  .toolbar #twitter-logo {
-    height: 40px;
-    margin: 0 8px;
-  }
-
-  .toolbar #youtube-logo {
-    height: 40px;
-    margin: 0 16px;
-  }
-
-  .toolbar #twitter-logo:hover,
-  .toolbar #youtube-logo:hover {
-    opacity: 0.8;
-  }
-
-  .content {
-    display: flex;
-    margin: 82px auto 32px;
-    padding: 0 16px;
-    max-width: 960px;
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .card-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    margin-top: 16px;
-  }
-
-  .card {
-    all: unset;
-    border-radius: 4px;
-    border: 1px solid #eee;
-    background-color: #fafafa;
-    height: 40px;
-    width: 200px;
-    margin: 0 8px 16px;
-    padding: 16px;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    transition: all 0.2s ease-in-out;
-    line-height: 24px;
-  }
-
-  .card-container .card:not(:last-child) {
-    margin-right: 0;
-  }
-
-  .card.card-small {
-    height: 16px;
-    width: 168px;
-  }
-
-  .card-container .card:not(.highlight-card) {
-    cursor: pointer;
-  }
-
-  .card-container .card:not(.highlight-card):hover {
-    transform: translateY(-3px);
-    box-shadow: 0 4px 17px rgba(0, 0, 0, 0.35);
-  }
-
-  .card-container .card:not(.highlight-card):hover .material-icons path {
-    fill: rgb(105, 103, 103);
-  }
-
-  .card.highlight-card {
-    background-color: #1976d2;
-    color: white;
-    font-weight: 600;
-    border: none;
-    width: auto;
-    min-width: 30%;
-    position: relative;
-  }
-
-  .card.card.highlight-card span {
-    margin-left: 60px;
-  }
-
-
-  a,
-  a:visited,
-  a:hover {
-    color: #1976d2;
-    text-decoration: none;
-  }
-
-  a:hover {
-    color: #125699;
-  }
-
-
-  .terminal::before {
-    content: "\2022 \2022 \2022";
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 4px;
-    background: rgb(58, 58, 58);
-    color: #c2c3c4;
-    width: 100%;
-    font-size: 2rem;
-    line-height: 0;
-    padding: 14px 0;
-    text-indent: 4px;
-  }
-
-  .terminal pre {
-    font-family: SFMono-Regular,Consolas,Liberation Mono,Menlo,monospace;
-    color: white;
-    padding: 0 1rem 1rem;
-    margin: 0;
-  }
-
-  .circle-link {
-    height: 40px;
-    width: 40px;
-    border-radius: 40px;
-    margin: 8px;
-    background-color: white;
-    border: 1px solid #eeeeee;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
-    transition: 1s ease-out;
-  }
-
-  .circle-link:hover {
-    transform: translateY(-0.25rem);
-    box-shadow: 0px 3px 15px rgba(0, 0, 0, 0.2);
-  }
-
-  /* Responsive Styles */
-  @media screen and (max-width: 767px) {
-    .card-container > *:not(.circle-link) ,
-    .terminal {
-      width: 100%;
-    }
-
-    .card:not(.highlight-card) {
-      height: 16px;
-      margin: 8px 0;
-    }
-
-    .card.highlight-card span {
-      margin-left: 72px;
-    }
-
-    svg#rocket-smoke {
-      right: 120px;
-      transform: rotate(-5deg);
-    }
-  }
 
 
   .drop-zone {
@@ -224,118 +56,6 @@
   color: #ffffff;
   text-align: center;
 }
-
-.image-gallery {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-
-.image-gallery div {
-  margin: 10px;
-  max-width: 400px;
-  max-height: 400px;
-  overflow: hidden;
-}
-
-.image-gallery img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.image-gallery button {
-  margin-top: 10px;
-}
-
-
-
-
-
-
-.image-container {
-  position: relative;
-  display: inline-block;
-}
-
-.image-container img {
-  display: block;
-  width: 100%;
-  height: auto;
-  transition: all 0.3s ease;
-}
-
-.overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  opacity: 0;
-  transition: opacity 0.3s ease;
-  background-color: rgba(255, 255, 255, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.overlay a {
-  color: #fff;
-  font-weight: bold;
-  text-transform: uppercase;
-  text-decoration: none;
-  border: 2px solid #fff;
-  padding: 10px 20px;
-  transition: all 0.3s ease;
-}
-
-.overlay a:hover {
-  background-color: #fff;
-  color: #000;
-}
-
-.image-container:hover img {
-  opacity: 0.5;
-}
-
-.image-container:hover .overlay {
-  opacity: 1;
-}
-
-
-
-
-
-
-
-.card {
-  background-color: #fff;
-  border-radius: 10px;
-  box-shadow: 0 12px 12px rgba(236, 230, 230, 0.4);
-  padding: 20px;
-  margin: 0 auto;
-  text-align: center;
-  min-height: 200px;
-  min-width: 200px;
-  border-color: #ffffff;
-}
-
-.card h2 {
-  margin-top: 0;
-}
-
-.card p {
-  margin-bottom: 0;
-}
-
-
-    .logotext {
-       font-size: x-large;
-       color: black;
-
-    }
-
-
 
 
 .buttondownload {
@@ -359,61 +79,10 @@
   color: #1951d5;
 }
 
+
+
+
 </style>
-
-
-<section class="hero">
-
-    <ng-particles [id]="id"
-                  [url]="particlesUrl"
-                  [particlesInit]="particlesInit"
-                  (particlesLoaded)="particlesLoaded($event)"
-                  style="height: 100%;"></ng-particles>
-
-    <!--<nav class="navbar navbar-expand-lg navbar-light bg-light" style="border-radius: 30px; margin-left: 20px; margin-top: 26px; margin-right: 20px; margin-bottom: 200px;">-->
-        <nav class="" style="border-radius: 30px; margin-left: 20px; margin-top: 250px; margin-right: 20px; margin-bottom: 200px;">
-            <div class="container-fluid">
-                <a class="logotext" href="index.html" style="margin-left: 30px;"></a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse justify-content-end" id="navbarText">
-                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                        <li class="nav-item">
-                            <a class="nav-link" aria-current="page" href="/">remove bg</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/imageedit">edit bg</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/about">about</a>
-                        </li>
-                    </ul>
-                    <!-- <span class="navbar-text">
-                      Navbar text with an inline element
-                    </span> -->
-                </div>
-            </div>
-        </nav>
-
-
-
-
-
-        <router-outlet>
-
-        </router-outlet>
-
-
-
-</section>
-
-
-  
-
-<div *ngIf="isLoading">
-  <ngx-spinner type="ball-scale-multiple"></ngx-spinner>
-</div>
 
 
 

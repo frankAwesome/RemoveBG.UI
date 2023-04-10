@@ -18,11 +18,20 @@
   from {opacity: 0;}
   to {opacity:1 ;}
 }
+
+.drop-zone p {
+  font-size: 19px;
+  color: #ffffff;
+  text-align: center;
+}
   </style>
 
- <nav class="navbar navbar-expand-lg navbar-light bg-light" style="border-radius: 15px; margin-left: 20px; margin-right: 20px; margin-top: -470px; height: 60px;">
+ <nav class="navbar navbar-expand-lg navbar-light bg-light" style="border-radius: 25px; margin-left: 20px; margin-right: 20px; height: 60px;">
+  <a href="#" class="navbar-brand">
+    <img src="../assets/img/logo.png" height="60">
+</a>
   <div class="container-fluid">
-      <a class="logotext" href="index.html" style="margin-left: 30px;"></a>
+      <a class="logotext" href="index.html" style="margin-left: -30px;"></a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
       </button>
@@ -40,30 +49,12 @@
           </ul>
 
       <button [hidden]="hideElement" class="btn btn-primary"  style="border-radius: 15px; margin: 15px;" crossorigin="anonymous" (click)="handleDownloadClick($event)">Download Image</button>
-      <!-- <br>
-      <button [hidden]="hideElement" class="btn btn-success"  style="border-radius: 15px;" crossorigin="anonymous" (click)="handleForegroundDownloadClick($event)">Download Foreground Image</button> -->
-
-          <!-- <span class="navbar-text">
-            Navbar text with an inline element
-          </span> -->
-
           
       </div>
   </div>
 </nav>
 
-<div class="hero-container" data-aos="fade-in" style="margin-top: 200px;">
-
-<!-- <div class="drop-zone" (drop)="handleBackground($event)" (dragover)="onDragOver($event)" style="margin-top: -180px;">
-    <p>drag and drop your background here</p>
-  </div>
-
-  <br>
-
-
-  <div class="drop-zone" (drop)="handleForeground($event)" (dragover)="onDragOver($event)" style="margin-top: -0px;">
-    <p>drag and drop your foreground here</p>
-  </div> -->
+<div data-aos="fade-in">
 
   <br>
   
@@ -75,231 +66,11 @@
   </div>
 
 
-
-
-  
-
-<br>
-
-<div class="box" 
-
-  >
-    <!-- <button [hidden]="hideElement">more info</button> -->
-<!-- <button [hidden]="hideElement" class="btn btn-success"  style="border-radius: 20px;" crossorigin="anonymous" (click)="handleDownloadClick($event)">Download Image</button>
-<br>
-<button [hidden]="hideElement" class="btn btn-success"  style="border-radius: 20px;" crossorigin="anonymous" (click)="handleForegroundDownloadClick($event)">Download Foreground Image</button> -->
-
-</div>
-
-
-
-
 </div>
 
 
 
 <style>
-
-    h1,
- h2,
- h3,
- h4,
- h5,
- h6 {
-   margin: 8px 0;
- }
-
- /* p {
-   margin: 0;
- } */
-
- .droptext {
-  font-size: 24px;
- color: #ffffff;
- text-align: center;
-}
-
- .spacer {
-   flex: 1;
- }
-
- .toolbar {
-   position: absolute;
-   top: 0;
-   left: 0;
-   right: 0;
-   height: 60px;
-   display: flex;
-   align-items: center;
-   background-color: #35b072;
-   color: white;
-   font-weight: 600;
- }
-
- .toolbar img {
-   margin: 0 16px;
- }
-
- .toolbar #twitter-logo {
-   height: 40px;
-   margin: 0 8px;
- }
-
- .toolbar #youtube-logo {
-   height: 40px;
-   margin: 0 16px;
- }
-
- .toolbar #twitter-logo:hover,
- .toolbar #youtube-logo:hover {
-   opacity: 0.8;
- }
-
- .content {
-   display: flex;
-   margin: 82px auto 32px;
-   padding: 0 16px;
-   max-width: 960px;
-   flex-direction: column;
-   align-items: center;
- }
-
- .card-container {
-   display: flex;
-   flex-wrap: wrap;
-   justify-content: center;
-   margin-top: 16px;
- }
-
- .card {
-   all: unset;
-   border-radius: 4px;
-   border: 1px solid #eee;
-   background-color: #fafafa;
-   height: 40px;
-   width: 200px;
-   margin: 0 8px 16px;
-   padding: 16px;
-   display: flex;
-   flex-direction: row;
-   justify-content: center;
-   align-items: center;
-   transition: all 0.2s ease-in-out;
-   line-height: 24px;
- }
-
- .card-container .card:not(:last-child) {
-   margin-right: 0;
- }
-
- .card.card-small {
-   height: 16px;
-   width: 168px;
- }
-
- .card-container .card:not(.highlight-card) {
-   cursor: pointer;
- }
-
- .card-container .card:not(.highlight-card):hover {
-   transform: translateY(-3px);
-   box-shadow: 0 4px 17px rgba(0, 0, 0, 0.35);
- }
-
- .card-container .card:not(.highlight-card):hover .material-icons path {
-   fill: rgb(105, 103, 103);
- }
-
- .card.highlight-card {
-   background-color: #1976d2;
-   color: white;
-   font-weight: 600;
-   border: none;
-   width: auto;
-   min-width: 30%;
-   position: relative;
- }
-
- .card.card.highlight-card span {
-   margin-left: 60px;
- }
-
-
- a,
- a:visited,
- a:hover {
-   color: #1976d2;
-   text-decoration: none;
- }
-
- a:hover {
-   color: #125699;
- }
-
-
- .terminal::before {
-   content: "\2022 \2022 \2022";
-   position: absolute;
-   top: 0;
-   left: 0;
-   height: 4px;
-   background: rgb(58, 58, 58);
-   color: #c2c3c4;
-   width: 100%;
-   font-size: 2rem;
-   line-height: 0;
-   padding: 14px 0;
-   text-indent: 4px;
- }
-
- .terminal pre {
-   font-family: SFMono-Regular,Consolas,Liberation Mono,Menlo,monospace;
-   color: white;
-   padding: 0 1rem 1rem;
-   margin: 0;
- }
-
- .circle-link {
-   height: 40px;
-   width: 40px;
-   border-radius: 40px;
-   margin: 8px;
-   background-color: white;
-   border: 1px solid #eeeeee;
-   display: flex;
-   justify-content: center;
-   align-items: center;
-   cursor: pointer;
-   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
-   transition: 1s ease-out;
- }
-
- .circle-link:hover {
-   transform: translateY(-0.25rem);
-   box-shadow: 0px 3px 15px rgba(0, 0, 0, 0.2);
- }
-
- /* Responsive Styles */
- @media screen and (max-width: 767px) {
-   .card-container > *:not(.circle-link) ,
-   .terminal {
-     width: 100%;
-   }
-
-   .card:not(.highlight-card) {
-     height: 16px;
-     margin: 8px 0;
-   }
-
-   .card.highlight-card span {
-     margin-left: 72px;
-   }
-
-   svg#rocket-smoke {
-     right: 120px;
-     transform: rotate(-5deg);
-   }
- }
 
 
  .drop-zone {
@@ -314,51 +85,6 @@
  cursor: pointer;
 }
 
-/* .drop-zone p {
- font-size: 14px;
- color: #ffffff;
- text-align: center;
-} */
-
-.image-gallery {
- display: flex;
- flex-wrap: wrap;
- justify-content: center;
-}
-
-.image-gallery div {
- margin: 10px;
- max-width: 400px;
- max-height: 400px;
- overflow: hidden;
-}
-
-.image-gallery img {
- width: 100%;
- height: 100%;
- object-fit: cover;
-}
-
-.image-gallery button {
- margin-top: 10px;
-}
-
-
-
-
-
-
-.image-container {
- position: relative;
- display: inline-block;
-}
-
-.image-container img {
- display: block;
- width: 100%;
- height: auto;
- transition: all 0.3s ease;
-}
 
 .overlay {
  position: absolute;
@@ -376,7 +102,6 @@
 
 .overlay a {
  color: #fff;
- font-weight: bold;
  text-transform: uppercase;
  text-decoration: none;
  border: 2px solid #fff;
@@ -395,32 +120,6 @@
 
 .image-container:hover .overlay {
  opacity: 1;
-}
-
-
-
-
-
-
-
-.card {
- background-color: #fff;
- border-radius: 10px;
- box-shadow: 0 12px 12px rgba(236, 230, 230, 0.4);
- padding: 20px;
- margin: 0 auto;
- text-align: center;
- min-height: 200px;
- min-width: 200px;
- border-color: #ffffff;
-}
-
-.card h2 {
- margin-top: 0;
-}
-
-.card p {
- margin-bottom: 0;
 }
 
 

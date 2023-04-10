@@ -20,24 +20,15 @@ import { Router } from '@angular/router';
 })
 export class UploadcomponentComponent{
     
-
-
-
   constructor(private http: HttpClient, private spinner: NgxSpinnerService, private db: AngularFireDatabase, private myService: ForegroundService, private router: Router)
   {
   }
-
-
 
 
   imageSrc = '';
   imageList: string[] = [];
   hideDropBox: boolean = true;
   isLoading: boolean = false;
-
-
-
-
 
   onDrop(event: any) {
     this.isLoading = true;
