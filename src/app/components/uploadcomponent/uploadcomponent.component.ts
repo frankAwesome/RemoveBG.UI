@@ -33,6 +33,10 @@ export class UploadcomponentComponent{
   hideDropBox: boolean = true;
   isLoading: boolean = false;
 
+  uploadHeight = 0;
+  uploadWidth= 0;
+
+
   onDrop(event: any) {
     this.isLoading = true;
     
