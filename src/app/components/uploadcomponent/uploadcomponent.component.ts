@@ -6,7 +6,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { MoveDirection, ClickMode, HoverMode, OutMode, Container, Engine } from "tsparticles-engine";
 import { loadFull } from "tsparticles";
 
-import { AngularFireDatabase, AngularFireDatabaseModule } from '@angular/fire/compat/database';
+import { AngularFireDatabase, AngularFireDatabaseModule, AngularFireList } from '@angular/fire/compat/database';
 import { ForegroundService } from 'src/app/services/foreground.service';
 import { Router } from '@angular/router';
 
@@ -26,6 +26,8 @@ export class UploadcomponentComponent{
 
 
   imageSrc = '';
+  IP = '';
+  Country = '';
   imageList: string[] = [];
   hideDropBox: boolean = true;
   isLoading: boolean = false;
@@ -69,16 +71,41 @@ export class UploadcomponentComponent{
           this.spinner.hide();
           this.myService.changeMessage('data:image/jpeg;base64,' + response.image);
           this.router.navigate(['/imageedit']);
+
+
+          try
+          {
+            this.http.get('https://geolocation-db.com/json', {
+              headers: {'Access-Control-Allow-Origin':'*'}
+           }).subscribe((response:any) => {
+              this.IP = response.IPv4;
+              this.Country = response.country_name;
+              console.log(response);
+            });
+      
+            const bytes = e.target.result.toString().split(',')[1].length * 0.75;
+            const megabytes = bytes / (1024 * 1024);
+
+            const currentDate = new Date();
+            const dateTimeString = `${currentDate.toLocaleDateString()} ${currentDate.toLocaleTimeString()}`;
+    
+            this.db.list('userlogs').push(
+              {
+                "IP":this.IP,
+                "Country": this.Country,
+                "ImageSize":megabytes,
+                "TmStamp":dateTimeString
+              })
+            .then(() => console.log('Object written to database'))
+            .catch((error: any) => console.error('Error writing object to database', error));
+          }
+          catch(ex)
+          {}
         });
       };
       reader.readAsDataURL(file)
       
     }
-
-    this.db.object('logs').set({"title":"hello"})
-    .then(() => console.log('Object written to database'))
-    .catch((error: any) => console.error('Error writing object to database', error));
-
   }
 
   downloadImage(image: string) {
