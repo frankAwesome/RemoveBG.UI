@@ -1,4 +1,4 @@
-<div data-aos="fade-in" style="text-align: center; margin-top: -300px;">
+<div data-aos="fade-in" style="text-align: center; margin-top: -300px;" (click)="onClick()" >
       
   
     <div class="drop-zone" (drop)="onDrop($event)" (dragover)="onDragOver($event)" [ngStyle]="{'visibility':hideDropBox ? 'visible' : 'hidden'}">
@@ -24,7 +24,7 @@
     
 
 </div>
-
+<input type="file" style="display:none" #fileInput (change)="onFileSelected($event)">
 
 <div *ngIf="isLoading">
     <ngx-spinner type="ball-scale-multiple"></ngx-spinner>

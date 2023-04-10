@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 import { NgxSpinnerService } from 'ngx-spinner';
@@ -19,6 +19,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./uploadcomponent.component.sass']
 })
 export class UploadcomponentComponent{
+  @ViewChild('fileInput') fileInput: any;
     
   constructor(private http: HttpClient, private spinner: NgxSpinnerService, private db: AngularFireDatabase, private myService: ForegroundService, private router: Router)
   {
@@ -129,6 +130,13 @@ export class UploadcomponentComponent{
       // this loads the tsparticles package bundle, it's the easiest method for getting everything ready
       // starting from v2 you can add only the features you need reducing the bundle size
       await loadFull(engine);
+  }
+
+
+  onClick() {
+    this.fileInput.nativeElement.click();
+  
+    
   }
 
 }
