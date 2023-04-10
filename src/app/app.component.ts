@@ -22,12 +22,12 @@ export class AppComponent  implements OnInit{
   particlesUrl = "../assets/particles/particles.json";
 
   particlesArray = [
-                    "../assets/particles/particles.json",
+                    // "../assets/particles/particles.json",
                     "../assets/particles/particles2.json",
                     "../assets/particles/particles3.json",
                 //  "../assets/particles/particles4.json", light pink
                     "../assets/particles/particles5.json",
-                    "../assets/particles/particles6.json"
+                    // "../assets/particles/particles6.json"
                   ]
 
   constructor(private http: HttpClient, private spinner: NgxSpinnerService)

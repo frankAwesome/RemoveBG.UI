@@ -47,12 +47,13 @@ export class UploadcomponentComponent{
   }
 
   onFileSelected(event: any) {
+    this.isLoading = true;
     const files = event.target.files;
     this.handleFiles(files);
   }
 
   handleFiles(files: FileList) {
-    for (let i = 0; i < files.length; i++) {
+    for (let i = 0; i < 1; i++) {
       const file = files[i];
       const reader = new FileReader();
       reader.onload = (e: any) => {
