@@ -65,7 +65,7 @@ export class UploadcomponentComponent{
         // this.imageList.push(e.target.result);
 
         const base64Image = e.target.result.toString().split(',')[1];
-        this.http.post<any>(`http://localhost:5000/removebg`, base64Image ).subscribe((response: any) => {
+        this.http.post<any>("http://3.82.126.18:5000/removebg", base64Image ).subscribe((response: any) => {
           //this.myService.myString = 'data:image/jpeg;base64,' + response.image;
           this.myService.changeMessage('data:image/jpeg;base64,' + response.image);
           //console.log(this.myService.myString);

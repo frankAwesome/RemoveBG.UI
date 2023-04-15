@@ -104,12 +104,13 @@
 
   <br>
   
-  <div class="drop-zone HideOnMobile">
-    <div style="padding: 10px; border-radius: 15px;">
+  <div style="margin-top: 30px;">
+    <div class="drop-zone HideOnMobile" style="border-radius: 15px;">
       <canvas id="canvas" #canvas [width]="canvasWidth" [height]="canvasHeight" crossorigin="anonymous" (click)="handleCanvasClick($event)" (drop)="handleBackground($event)" (dragover)="onDragOver($event)"></canvas>
     </div>
     <br>
-    <p class="droptext">drag and drop a background image above</p>
+    <p [hidden]="hideElement" class="droptext HideOnMobile">drag any background here or click the image to resize</p>
+    <p [hidden]="!hideElement" class="droptext HideOnMobile">resize the image, or click to move it around</p>
   </div>
 
 
@@ -119,18 +120,34 @@
 
 
 
-<div class="image-gallery ShowOnMobile" style="margin-top: 20px;">
-    <div class="image-container card">
+<div class="content3 ShowOnMobile" style="margin-top: 20px;">
+    <div class="drop-zone-mobile-1">
+
+      <div class="drop-zone-mobile-2">
+        <img [src]="base64Image" alt="Uploaded image" class="image-gallery2">
+      </div>
+
+      <br>
       
-      <img [src]="base64Image" alt="Uploaded image" class="image-gallery2">
-      <button style="margin-top: 20px;" type="button" class="btn btn-primary" (click)="downloadImage(base64Image)">Download</button>
+      
+
+      <button style="align-content: center;" type="button" class="btn btn-primary" (click)="downloadImage(base64Image)">Download</button>
+      
     </div>
+
+   
 
 </div>
 
 
 
 <style>
+
+.droptext {
+  font-size: 20px;
+ color: #ffffff;
+ text-align: center;
+}
 
   .image-gallery{
  border-radius: 40px;
@@ -147,10 +164,10 @@
   }
 
  .drop-zone {
- border: 1px dashed #ffffff;
+border: 1px dashed #f8f9fa;
  border-radius: 40px;
- width: 800px;
- height: 600px;
+ width: 700px;
+ height: 500px;
  display: flex;
  flex-direction: column;
  align-items: center;
@@ -159,13 +176,20 @@
 }
 
 
-
-.image-container:hover img {
- opacity: 0.5;
+.drop-zone-mobile-1 {
+ width: 100%;
+  height: 100%;
+ display: flex;
+ flex-direction: column;
+ align-items: center;
+ justify-content: center;
+ cursor: pointer;
 }
 
-.image-container:hover .overlay {
- opacity: 1;
+
+.drop-zone-mobile-2 {
+border: 1px dashed #f8f9fa;
+ border-radius: 40px;
 }
 
 

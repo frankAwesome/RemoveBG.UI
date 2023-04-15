@@ -3,6 +3,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Subscription } from 'rxjs';
 import { ForegroundService } from 'src/app/services/foreground.service';
+import { colorMix } from 'tsparticles-engine';
 // import { Background } from 'tsparticles-engine';
 
 @Component({
@@ -39,6 +40,8 @@ export class EditimageComponent implements OnInit {
   releasePrevX = 0; 
   releasePrevY = 0;
 
+  hideDropBox = true;
+  
 
   // foreground image properties
   private foregroundimage = new Image;
@@ -52,8 +55,9 @@ export class EditimageComponent implements OnInit {
   private browserwindowW: number = 0;
   private browserwindowH: number = 0;
 
-  //show/hide download buttons
+  //show/hide UXtext
   hideElement = false;
+  UserUX = 0;
 
   startUp = false;
 
@@ -61,10 +65,10 @@ export class EditimageComponent implements OnInit {
 
   base64Image = ''
   backgroundBase64Image = ''
-  canvasWidth = 612;
-  canvasHeight = 428;
+  canvasWidth = 700;
+  canvasHeight = 500;
 
-  foreClicked = false;
+  foreClicked = true;
   coordinatesChanged = false;
 
   constructor(private domSanitizer: DomSanitizer, private myService: ForegroundService) {
@@ -76,27 +80,16 @@ export class EditimageComponent implements OnInit {
 
   ngOnInit(): void {
     
-
     this.canvas = <HTMLCanvasElement> document.getElementById('canvas');
     if (this.canvas) {
       var ctx = this.canvas.getContext('2d');
 
       if (ctx != null){
-
-
         this.BGimage = "../../assets/img/bmw.jpg";
-        //this.FGimage = "../../assets/img/image2.png";
 
         this.subscription = this.myService.currentMessage.subscribe(message => this.FGimage = message);
 
-        //this.FGimage = (window as any).myGlobalVar;
-
-        //this.FGimage = this.myService.myString;
-        //console.log(this.FGimage);
-
         this.base64Image = this.FGimage;
-        // this.canvas.setAttribute('style', "background: url(\'" + "../../assets/img/bmw.jpg" + "\'); background-repeat: no-repeat; background-size: 100% 100%;");
-        // this.canvas.setAttribute('style', "background: transparent; background-repeat: no-repeat; background-size: 100% 100%;");
 
         this.img.crossOrigin = 'Anonymous';
         this.img.src = this.FGimage;
@@ -115,8 +108,11 @@ export class EditimageComponent implements OnInit {
           this.foregroundimageW = this.imgWidth;
           this.foregroundimageH = this.imgHeight;
 
+          this.UserUX=0;
+          //guide the user that they can do something with the image
           this.draw(0);
-          
+          // this.foreClicked=false;
+
           this.canvas.addEventListener('mousedown', this.onMouseDown.bind(this));
           this.canvas.addEventListener('mouseup', this.onMouseUp.bind(this));
           this.canvas.addEventListener('mousemove', this.onMouseMove.bind(this));
@@ -149,17 +145,19 @@ export class EditimageComponent implements OnInit {
           img.src = base64Image;
 
           img.onload = () => {
-            this.canvasWidth = img.width;
-            this.canvasHeight = img.height;
-            this.canvas.height = img.height;
-            this.canvas.width = img.width;
+
+
+            // this.canvasWidth = img.width;
+            // this.canvasHeight = img.height;
+            // this.canvas.height = img.height;
+            // this.canvas.width = img.width;
+            
 
             this.canvas.setAttribute('style', "background: url(\'" + base64Image + "\'); background-repeat: no-repeat; background-size: 100% 100%;");
       
             this.img.src = this.base64Image;
       
-            this.img.onload = () => {
-              this.foreClicked = false;
+            this.img.onload = () => {       
               this.coordinatesChanged = false;
 
               ////get from foreground image properties            
@@ -168,19 +166,18 @@ export class EditimageComponent implements OnInit {
 
               this.imgWidth = this.foregroundimageW ;
               this.imgHeight = this.foregroundimageH;
-
-              //this.imgX = this.canvas.width / 2 + this.foregroundimageX + (this.browserwindowW - this.canvas.width);
-              //this.imgY = this.canvas.height / 2 + this.foregroundimageY + (this.browserwindowH - this.canvas.height);
-              this.foreClicked = false
-              this.startUp = false          
+     
               this.draw(0);
-              this.startUp = true;
+
             }
           }
         };
 
-        console.log( this.backgroundBase64Image)
+        //Reset for background image??
+        this.foreClicked = false
+        this.hideElement = true
 
+        this.hideDropBox = false
         reader.readAsDataURL(file);   
   }
 
@@ -188,43 +185,42 @@ export class EditimageComponent implements OnInit {
 
  //------------------------------------------FOREGROUND IMAGE----------------------------------------------
 
-  async handleForeground(event: any) {
+  // async handleForeground(event: any) {
 
-    event.preventDefault();
-    const file = event.dataTransfer.files[0];
+  //   event.preventDefault();
+  //   const file = event.dataTransfer.files[0];
 
-    const reader = new FileReader();
-    reader.onload = (e: any) => {
+  //   const reader = new FileReader();
+  //   reader.onload = (e: any) => {
 
-    this.base64Image = 'data:image/jpeg;base64,' + e.target.result.toString().split(',')[1];
+  //   this.base64Image = 'data:image/jpeg;base64,' + e.target.result.toString().split(',')[1];
 
-    this.img.src = this.base64Image;
+  //   this.img.src = this.base64Image;
 
-    this.img.onload = () => {
+  //   this.img.onload = () => {
 
-      this.foreClicked = false;
-      this.coordinatesChanged = false;
+  //     this.foreClicked = false;
+  //     this.coordinatesChanged = false;
 
-      this.imgX = this.canvas.width/2 - this.img.width/2/this.imgRatio;
-      this.imgY = this.canvas.height/2 - this.img.height/2/this.imgRatio;
-      this.imgWidth = this.img.width/this.imgRatio;
-      this.imgHeight = this.img.height/this.imgRatio;
-      this.startUp = false;
-      this.draw(0);
+  //     this.imgX = this.canvas.width/2 - this.img.width/2/this.imgRatio;
+  //     this.imgY = this.canvas.height/2 - this.img.height/2/this.imgRatio;
+  //     this.imgWidth = this.img.width/this.imgRatio;
+  //     this.imgHeight = this.img.height/this.imgRatio;
+  //     this.startUp = false;
+  //     this.draw(0);
+  //     this.startUp = true;
+  //   }
 
-      this.startUp = true;
-    }
+  //   //set foreground image properties
+  //   this.foregroundimage = this.img;
+  //   this.foregroundimageX = this.imgX;
+  //   this.foregroundimageY = this.imgY;
+  //   this.foregroundimageW = this.imgWidth;
+  //   this.foregroundimageH = this.imgHeight;
 
-    //set foreground image properties
-    this.foregroundimage = this.img;
-    this.foregroundimageX = this.imgX;
-    this.foregroundimageY = this.imgY;
-    this.foregroundimageW = this.imgWidth;
-    this.foregroundimageH = this.imgHeight;
-
-    };
-    reader.readAsDataURL(file);
-  }
+  //   };
+  //   reader.readAsDataURL(file);
+  // }
 
 
   onDragOver(event: any) {
@@ -238,59 +234,50 @@ export class EditimageComponent implements OnInit {
     var ctx = this.canvas.getContext('2d');
 
     if (ctx){
-    ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    ctx.save();
-    // ctx.translate(this.canvas.width / 2, this.canvas.height / 2);
-    // ctx.scale(this.scaleFactor, this.scaleFactor);
-    // ctx.translate(this.translateX, this.translateY);
+              ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+              ctx.save();
+             
+              //DRAW A BORDER FOR THE USER TO BE ABLE TO SELECT THE CORNER FOR RESIZE
+              if (this.foreClicked)
+              {
+                ctx.beginPath();
+                ctx.lineWidth = 1;
+                ctx.strokeStyle = "white";                
+                ctx.setLineDash([3]);
+                ctx.rect(this.imgX - 25, this.imgY - 25, this.imgWidth + 50, this.imgHeight + 50);      
+                ctx.stroke();
+              }
 
-    if (this.startUp)
-    {
-      if (this.foreClicked)
-      {
-        ctx.beginPath();
-        ctx.lineWidth = 5;
-        ctx.strokeStyle = "lightblue";
-        ctx.rect(this.imgX-10, this.imgY-10, this.imgWidth+20, this.imgHeight+20);
-        ctx.stroke();
-      }
+              //UX - GUIDE USER TO RESIZE IMAGE
+              this.hideElement = this.foreClicked
+     
+              //FIX THE ROTATION OF PROCESSED IMAGE
+              // if (degrees!=0){
+              //   // rotate the canvas to the specified degrees
+              //   ctx.setTransform(1, 0, 0, 1, x, y); // sets scale and origin
+              //   ctx.rotate(degrees*Math.PI/180);
+              // }
+              // else {
+                
+              // }
 
-      ctx.drawImage(this.img, this.imgX, this.imgY, this.imgWidth, this.imgHeight);
-    }
-    else
-    {
-      if (this.foreClicked)
-      {
-        ctx.beginPath();
-        ctx.lineWidth = 5;
-        ctx.strokeStyle = "lightblue";
-        ctx.rect(this.imgX + 10, this.imgY + 10, this.imgWidth - 20, this.imgHeight - 20);
-        ctx.stroke();
-      }
-
-      //FIX
-      // if (degrees!=0){
-      //   // rotate the canvas to the specified degrees
-      //   ctx.setTransform(1, 0, 0, 1, x, y); // sets scale and origin
-      //   ctx.rotate(degrees*Math.PI/180);
-      // }
-      // else {
-        
-      // }
-
-      //CENTRE IMAGE AFTER UPLOAD
-      this.imgX = this.canvas.width/2 - this.img.width/2/this.imgRatio;
-      this.imgY = this.canvas.height / 2 - this.img.height / 2 / this.imgRatio;
-      ctx.drawImage(this.img, this.imgX, this.imgY, this.imgWidth, this.imgHeight);
-
-      this.startUp = true;
-    }
-    
-    ctx.restore();
-  }
+              //CENTRE IMAGE AFTER 1ST UPLOAD
+              if (this.startUp == true)
+              {
+                this.imgX = this.canvas.width/2 - this.img.width/2/this.imgRatio;
+                this.imgY = this.canvas.height / 2 - this.img.height / 2 / this.imgRatio;
+                this.startUp = false;
+              }
+          
+              ctx.drawImage(this.img, this.imgX, this.imgY, this.imgWidth, this.imgHeight);       
+              ctx.restore();
+            }
   }
 
+
+  //NOT USED
   handleCanvasClick(event: MouseEvent) {
+
   }
 
 
@@ -298,22 +285,86 @@ export class EditimageComponent implements OnInit {
 //------------------------------------------MOUSE EVENTS----------------------------------------------
 
 private onMouseDown(event: MouseEvent) {
+  this.isDragging = false;
+  this.isResizing = false;
 
   //only enable when user clicks inside image
   if (event.offsetX <= this.imgX + this.imgWidth && (event.offsetX >= this.imgX)) {
     if (event.offsetY <= this.imgY + this.imgHeight && (event.offsetY >= this.imgY)) {
       this.isDragging = true;
     }
-    else{
-      this.isDragging = false;
-    };
-  }else{
-    this.isDragging = false;
-  };
+  }
 
-  this.prevX = event.offsetX;
-  this.prevY = event.offsetY;
+      if (this.isDragging)
+      {
+        this.releasePrevX = event.offsetX;
+        this.releasePrevY = event.offsetY;
+      }
+
+      this.prevX = event.offsetX;
+      this.prevY = event.offsetY; 
+
+
+  if (this.foreClicked){
+
+    //only enable when user clicks and drags inside image corners
+
+  //  TOP LEFT CORNER
+  if (event.offsetX > this.imgX -25){
+    if (event.offsetY > this.imgY-25){
+      if (event.offsetX < this.imgX -10){
+        if (event.offsetY < this.imgY-10){
+          this.isResizing = true;
+        }
+      }
+    }
+  }
+
+     //TOP RIGHT CORNER
+     if (event.offsetX > this.imgX + this.imgWidth - 10){
+      if (event.offsetY > this.imgY -25){
+     
+        if (event.offsetX < this.imgX + this.imgWidth +25){
+          if (event.offsetY < this.imgY+10){
+            this.isResizing = true;
+          }
+        } 
+   }
+  }
+
+      // //BOTTOM LEFT CORNER
+      if (event.offsetX > this.imgX -25){
+        if (event.offsetY > this.imgY + this.imgHeight - 25 ){
+          if (event.offsetX < this.imgX + 25){
+            if (event.offsetY < this.imgY + this.imgHeight +25){
+              this.isResizing = true;
+            }
+          }
+        }
+      }
+      
+    //BOTTOM RIGHT CORNER
+    if (event.offsetX > this.imgX + this.imgWidth - 10){
+    if (event.offsetY > this.imgY+ this.imgHeight - 10 ){
+      if (event.offsetX < this.imgX + this.imgWidth + 25){
+        if (event.offsetY < this.imgY+ this.imgHeight + 25 ){
+          this.isResizing = true;
+        }
+      }
+    }
+  }
+
+
+
+    // if (event.offsetX <= this.imgX + this.imgWidth  && (event.offsetX >= this.imgX )) {
+    //   if (event.offsetY <= this.imgY + this. imgHeight && (event.offsetY >= this.imgY )) {
+    //     this.isResizing = true;
+    //   }
+    // }
+
 }
+}
+
 
 
 
@@ -321,75 +372,116 @@ private onMouseUp(event: MouseEvent) {
   this.isDragging = false;
   this.isResizing = false;
 
-  if ((this.releasePrevX != event.offsetX) || (this.releasePrevY != event.offsetY))
-  {
-    this.coordinatesChanged = true
-  }
-  else{
-    this.coordinatesChanged = false
-  }
+  if (event.offsetX <= this.imgX + this.imgWidth && (event.offsetX >= this.imgX)) {
+    if (event.offsetY <= this.imgY + this.imgHeight && (event.offsetY >= this.imgY)) {
+                        
+          //CHECK IF IMAGE WAS MOVED WHILE THE MOUSE WAS DOWN
+          if ((this.releasePrevX > event.offsetX) || (this.releasePrevY > event.offsetY) || (this.releasePrevX < event.offsetX) || (this.releasePrevY < event.offsetY))
+          {
+            this.coordinatesChanged = true
+          }
+          else{
+            this.coordinatesChanged = false
+          }
 
-  if (this.foreClicked == false && this.coordinatesChanged == false)
-  {
-    this.foreClicked = true
-  }
-  else if (this.foreClicked == true && this.coordinatesChanged == false)
-  {
-    this.foreClicked = false
-  }
+          if (this.coordinatesChanged == false) {
+            if (this.foreClicked == false){
+              //HIDE BORDER AROUND IMAGE
+              this.foreClicked = true;
+            }
+            else
+            {
+              //SHOW BORDER AROUND IMAGE
+              this.foreClicked = false;      
+            }
+          }
 
-  this.prevX = event.offsetX;
-  this.prevY = event.offsetY;
+          this.prevX = event.offsetX;
+          this.prevY = event.offsetY;
 
-  this.draw(0);
-  this.releasePrevX = event.offsetX;
-  this.releasePrevY = event.offsetY;
-  this.coordinatesChanged = false;
+          this.draw(0);               
+       }; 
+   };
+
+  this.coordinatesChanged = false
 
 }
+
 
 
 
 private onMouseMove(event: MouseEvent) {
 
-//Check if user is moving the mouse on the image
-if (this.isDragging ==false){
- if (event.offsetX <= this.imgX + this.imgWidth && (event.offsetX >= this.imgX)) {
-  if (event.offsetY <= this.imgY + this.imgHeight && (event.offsetY >= this.imgY)) {
-    
-      // console.log('show popup')
-      this.hideElement = false;
-     };
- };
-
-}
-
-
-
-
+  //DRAG AND MOVE IMAGE AROUND
   if (this.isDragging && !this.foreClicked) {
 
-    var deltaX = event.offsetX - this.prevX;
-    var deltaY = event.offsetY - this.prevY;
+        var deltaX = event.offsetX - this.prevX;
+        var deltaY = event.offsetY - this.prevY;
 
-    this.imgX += deltaX;
-    this.imgY += deltaY;
+        this.imgX += deltaX;
+        this.imgY += deltaY;
 
-    this.prevX = event.offsetX;
-    this.prevY = event.offsetY;
+        this.prevX = event.offsetX;
+        this.prevY = event.offsetY;
 
-      this.draw(0);
-    }
+          this.draw(0);
+      }
+    else 
+        if (this.isResizing && this.foreClicked) {
 
-    if (this.foreClicked) {
+        //DRAW IMAGE AGAIN BASED ON RESIZE
+        //  console.log('DRAG MOVE!')
 
-      this.imgWidth = event.offsetX;
-      this.imgHeight = event.offsetY;
+        var deltaX = event.offsetX - this.prevX;
+        var deltaY = event.offsetY - this.prevY;
+    
+        //  this.imgX += deltaX;
+        //  this.imgY += deltaY;
+    
+        this.prevX = event.offsetX;
+        this.prevY = event.offsetY;
 
-      this.draw(0);
-    }
-  }
+        this.imgWidth = this.imgWidth + (deltaX)
+        this.imgHeight = this.imgHeight + (deltaY)
+      
+        this.draw(0);
+      }
 
+
+// UX
+    // if (event.offsetX <= this.imgX + this.imgWidth && (event.offsetX >= this.imgX)) {
+    //   if (event.offsetY <= this.imgY + this.imgHeight && (event.offsetY >= this.imgY)) {
+
+    //       if (this.foreClicked==false) {
+    //         if (this.isDragging ==false) 
+    //         {              
+          
+    //           //guide the user to understand that they can do something with the image
+    //           if (this.UserUX == 0)
+      
+    //           this.UserUX = 1
+
+    //         }        
+    //       }
+    //       else
+    //       {   
+    //         if (this.UserUX == 1)
+    //         {
+    //           console.log('EVEN BETTER')
+    //           this.UserUX = 2
+    //         }
+    //       }
+    //   }
+    // }
+ }
+
+
+  // private SetUXText(){
+
+    
+
+  //   }
+  
 
 
 
@@ -486,6 +578,17 @@ console.log('!=')
     }
 
 
+    downloadImage(image: string) {
+      const link = document.createElement('a');
+      link.setAttribute('href', image);
+      link.setAttribute('download', 'image.png');
+      link.style.display = 'none';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
+
 
     // handleForegroundDownloadClick(event: MouseEvent) {
 
@@ -512,15 +615,4 @@ console.log('!=')
     //   // Release the URL object
     //   window.URL.revokeObjectURL(url);
     //   };
-
-
-    downloadImage(image: string) {
-      const link = document.createElement('a');
-      link.setAttribute('href', image);
-      link.setAttribute('download', 'image.png');
-      link.style.display = 'none';
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-    }
   }
