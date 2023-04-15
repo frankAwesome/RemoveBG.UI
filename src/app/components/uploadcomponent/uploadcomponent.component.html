@@ -5,7 +5,8 @@
   
     <div class="drop-zone" (drop)="onDrop($event)" (dragover)="onDragOver($event)" [ngStyle]="{'visibility':hideDropBox ? 'visible' : 'hidden'}">
       <br>
-      <p>drag and drop your image here</p>
+      <p class="HideOnMobile" style="margin-bottom: -10px;">drag and drop your image here</p>
+      <p class="ShowOnMobile" style="margin-top: -25px;">click to add your image</p>
       <!-- <input type="file" (change)="onFileSelected($event)" multiple> -->
     </div>
     
@@ -37,6 +38,25 @@
 
 
 <style>
+
+
+@media (max-width: 575.98px) {
+  .HideOnMobile {
+    visibility: hidden;
+  }
+  .ShowOnMobile {
+    visibility: visible;
+  }
+}
+
+@media (min-width: 576px) {
+  .HideOnMobile {
+    visibility: visible;
+  }
+  .ShowOnMobile {
+    visibility: hidden;
+  }
+}
 
 
   .drop-zone {

@@ -95,6 +95,25 @@ export class EditimageComponent implements OnInit {
         this.img.src = this.FGimage;
 
         this.img.onload = () => {
+          if (this.img.height >= this.img.width)
+          {
+            var ratio = this.img.height / 400;
+            this.img.height = 400 * this.imgRatio;
+  
+            this.img.width = this.img.width / ratio * this.imgRatio;
+          }
+          else
+          {
+            var ratio = this.img.width / 400;
+            this.img.width = 400 * this.imgRatio;
+  
+            this.img.height = this.img.height / ratio * this.imgRatio;
+          }
+
+
+
+
+
           // Draw the image on the canvas
           this.imgX = this.canvas.width/2 - this.img.width/2/this.imgRatio;
           this.imgY = this.canvas.height/2 - this.img.height/2/this.imgRatio;

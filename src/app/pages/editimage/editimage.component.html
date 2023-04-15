@@ -56,17 +56,14 @@
           <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse justify-content-end" id="navbarText">
-          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-              <li class="nav-item">
-                  <a class="nav-link" aria-current="page" href="/">remove bg</a>
-              </li>
-              <li class="nav-item">
-                  <a class="nav-link" href="/imageedit">edit bg</a>
-              </li>
-              <li class="nav-item">
-                  <a class="nav-link" href="/about">about</a>
-              </li>
-          </ul>
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+              <a class="nav-link" aria-current="page" routerLink="">remove background</a>
+          </li>
+          <!-- <li class="nav-item">
+              <a class="nav-link" routerLink="about">about</a>
+          </li> -->
+      </ul>
 
       <button [hidden]="hideElement" class="btn btn-primary"  style="border-radius: 15px; margin: 15px;" crossorigin="anonymous" (click)="handleDownloadClick($event)">Download Image</button>
           
@@ -86,13 +83,10 @@
       <div class="collapse navbar-collapse justify-content-end" id="navbarText">
           <ul class="navbar-nav me-auto mb-2 mb-lg-0">
               <li class="nav-item">
-                  <a class="nav-link" aria-current="page" href="/">remove bg</a>
+                  <a class="nav-link" aria-current="page" routerLink="">remove background</a>
               </li>
               <li class="nav-item">
-                  <a class="nav-link" href="/imageedit">edit bg</a>
-              </li>
-              <li class="nav-item">
-                  <a class="nav-link" href="/about">about</a>
+                  <a class="nav-link" routerLink="about">about</a>
               </li>
           </ul>
           
@@ -109,7 +103,7 @@
       <canvas id="canvas" #canvas [width]="canvasWidth" [height]="canvasHeight" crossorigin="anonymous" (click)="handleCanvasClick($event)" (drop)="handleBackground($event)" (dragover)="onDragOver($event)"></canvas>
     </div>
     <br>
-    <p [hidden]="hideElement" class="droptext HideOnMobile">drag any background here or click the image to resize</p>
+    <p [hidden]="hideElement" class="droptext HideOnMobile">drag any background above or click the image to resize</p>
     <p [hidden]="!hideElement" class="droptext HideOnMobile">resize the image, or click to move it around</p>
   </div>
 
