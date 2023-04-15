@@ -1,5 +1,5 @@
 
-
+<!-- 
 <style>
   :host {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
@@ -359,19 +359,35 @@
   color: #1951d5;
 }
 
-</style>
+</style> -->
+
+<ng-particles [id]="id"
+    [url]="particlesUrl"
+    [particlesInit]="particlesInit"
+    (particlesLoaded)="particlesLoaded($event)">
+</ng-particles> 
 
 
-<section class="hero">
+  <router-outlet>
+  </router-outlet>
 
-    <ng-particles [id]="id"
+
+
+
+<!-- <div class="center">
+  <p>This div is vertically centered.</p>
+</div> -->
+
+<!-- <section class=""> -->
+
+    <!-- <ng-particles [id]="id"
                   [url]="particlesUrl"
                   [particlesInit]="particlesInit"
                   (particlesLoaded)="particlesLoaded($event)"
-                  style="height: 100%;"></ng-particles>
+                  style="height: 100%;"></ng-particles> -->
 
     <!--<nav class="navbar navbar-expand-lg navbar-light bg-light" style="border-radius: 30px; margin-left: 20px; margin-top: 26px; margin-right: 20px; margin-bottom: 200px;">-->
-        <nav class="" style="border-radius: 30px; margin-left: 20px; margin-top: 250px; margin-right: 20px; margin-bottom: 200px;">
+        <!-- <nav class="" style="border-radius: 30px; margin-left: 20px; margin-top: 250px; margin-right: 20px; margin-bottom: 200px;">
             <div class="container-fluid">
                 <a class="logotext" href="index.html" style="margin-left: 30px;"></a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
@@ -389,31 +405,21 @@
                             <a class="nav-link" href="/about">about</a>
                         </li>
                     </ul>
-                    <!-- <span class="navbar-text">
-                      Navbar text with an inline element
-                    </span> -->
-                </div>
+                        </div>
             </div>
-        </nav>
+        </nav> -->
+        <!-- <router-outlet>
+
+        </router-outlet> -->
 
 
 
-
-
-        <router-outlet>
-
-        </router-outlet>
-
-
-
-</section>
+<!-- </section> -->
 
 
   
 
-<div *ngIf="isLoading">
-  <ngx-spinner type="ball-scale-multiple"></ngx-spinner>
-</div>
+
 
 
 

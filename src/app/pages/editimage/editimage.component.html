@@ -1,5 +1,5 @@
 
-<style>
+<!-- <style>
     #canvas {
       background-repeat: no-repeat;
       background-position: center center;
@@ -8,7 +8,7 @@
       vertical-align: middle;
       border-radius: 20px;
     }
-/* Add animation (fade in the popup) */
+Add animation (fade in the popup)
 @-webkit-keyframes fadeIn {
   from {opacity: 0;} 
   to {opacity: 1;}
@@ -18,41 +18,75 @@
   from {opacity: 0;}
   to {opacity:1 ;}
 }
-  </style>
 
- <nav class="navbar navbar-expand-lg navbar-light bg-light" style="border-radius: 15px; margin-left: 20px; margin-right: 20px; margin-top: -470px; height: 60px;">
-  <div class="container-fluid">
-      <a class="logotext" href="index.html" style="margin-left: 30px;"></a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse justify-content-end" id="navbarText">
-          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-              <li class="nav-item">
-                  <a class="nav-link" aria-current="page" href="/">remove bg</a>
-              </li>
-              <li class="nav-item">
-                  <a class="nav-link" href="/imageedit">edit bg</a>
-              </li>
-              <li class="nav-item">
-                  <a class="nav-link" href="/about">about</a>
-              </li>
-          </ul>
+.center {
+  margin: auto;
+  top: 50%;
+  width: 50%;
+  align-content: center;
 
-      <button [hidden]="hideElement" class="btn btn-primary"  style="border-radius: 15px; margin: 15px;" crossorigin="anonymous" (click)="handleDownloadClick($event)">Download Image</button>
-      <!-- <br>
-      <button [hidden]="hideElement" class="btn btn-success"  style="border-radius: 15px;" crossorigin="anonymous" (click)="handleForegroundDownloadClick($event)">Download Foreground Image</button> -->
+  position: absolute;
+  transform: translate(50%, -50%);
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+    margin: 0;
+  position: absolute;
+  top: 50%;
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+}
 
-          <!-- <span class="navbar-text">
-            Navbar text with an inline element
-          </span> -->
+  </style> -->
 
-          
-      </div>
+
+<div style="padding:20px">
+  <nav class="navbar navbar-expand-lg navbar-light bg-light" style="border-radius: 40px; height: 60px;">
+    <div class="container-fluid">
+        <a class="logotext" href="index.html" style="margin-left: 30px;"></a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse justify-content-end" id="navbarText">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link" aria-current="page" href="/">remove background</a>
+                </li>
+                <!-- <li class="nav-item">
+                    <a class="nav-link" href="/imageedit">edit bg</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/about">about</a>
+                </li> -->
+            </ul>
+  
+       
+        </div>
+    </div>
+    <button class="downlbutton"  crossorigin="anonymous" (click)="handleDownloadClick($event)">download image</button>
+ 
+  </nav>
+  
+</div>
+
+
+
+<!-- <div class="center">
+  <div class="drop-zone">
+  
+    <div style="padding: 10px; border-radius: 15px;">
+      <canvas id="canvas" #canvas [width]="canvasWidth" [height]="canvasHeight" crossorigin="anonymous" (click)="handleCanvasClick($event)" (drop)="handleBackground($event)" (dragover)="onDragOver($event)"></canvas>
+    </div>
+    <p [hidden]="hideElement" class="droptext">drag any background image here</p>
   </div>
-</nav>
 
-<div class="hero-container" data-aos="fade-in" style="margin-top: 200px;">
+</div> -->
+
+
+
+
+<!-- <div class="hero-container" data-aos="fade-in" style="margin-top: 200px;"> -->
 
 <!-- <div class="drop-zone" (drop)="handleBackground($event)" (dragover)="onDragOver($event)" style="margin-top: -180px;">
     <p>drag and drop your background here</p>
@@ -65,40 +99,43 @@
     <p>drag and drop your foreground here</p>
   </div> -->
 
-  <br>
-  
-  <div class="drop-zone">
-    <div style="padding: 10px; border-radius: 15px;">
-      <canvas id="canvas" #canvas [width]="canvasWidth" [height]="canvasHeight" crossorigin="anonymous" (click)="handleCanvasClick($event)" (drop)="handleBackground($event)" (dragover)="onDragOver($event)"></canvas>
-    </div>
-    <p class="droptext">drag and drop a background image here</p>
+  <!-- <br> -->
+  <div class="center">
+    <div class="drop-zone-2" (dragover)="onDragOver($event)">
+      <canvas id="canvas" #canvas [width]="canvasWidth" [height]="canvasHeight" crossorigin="anonymous" (click)="handleCanvasClick($event)" (drop)="handleBackground($event)" (dragover)="onDragOver($event)"></canvas>            
+     </div>
+
+      <p [hidden]="hideElement" class="droptext">drag any background here or click the image to resize</p>
+      <p [hidden]="!hideElement" class="droptext">resize the image, or click to move it around</p>
+      
   </div>
 
 
 
 
-  
+<!-- <br> -->
 
-<br>
+<!-- <div class="box"  -->
 
-<div class="box" 
 
-  >
     <!-- <button [hidden]="hideElement">more info</button> -->
 <!-- <button [hidden]="hideElement" class="btn btn-success"  style="border-radius: 20px;" crossorigin="anonymous" (click)="handleDownloadClick($event)">Download Image</button>
 <br>
 <button [hidden]="hideElement" class="btn btn-success"  style="border-radius: 20px;" crossorigin="anonymous" (click)="handleForegroundDownloadClick($event)">Download Foreground Image</button> -->
 
-</div>
+<!-- </div> -->
 
 
 
 
-</div>
+<!-- </div> -->
 
 
 
-<style>
+<!-- <style>
+
+
+
 
     h1,
  h2,
@@ -117,6 +154,19 @@
   font-size: 24px;
  color: #ffffff;
  text-align: center;
+}
+
+.dlbutton {
+  font-size: 14px;
+  color: #555a60;
+  border-radius: 20px;
+  border: 1px solid rgb(227, 227, 227);
+  background: #fcfcfcd9;
+  height: 40px;
+  width: 180px;
+  text-align: center;
+  cursor: pointer;
+  margin-right: 30px;
 }
 
  .spacer {
@@ -434,7 +484,7 @@
  padding: 12px 24px;
  border-radius: 30px;
  background-color: #fff;
- color: #2590b0;
+ color: #4b585b;
  font-size: 16px;
  font-weight: bold;
  text-align: center;
@@ -449,6 +499,6 @@
  color: #1951d5;
 }
 
-</style>
+</style> -->
 
 

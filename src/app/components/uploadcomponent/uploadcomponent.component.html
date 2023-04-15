@@ -1,28 +1,20 @@
-<div class="hero-container" data-aos="fade-in">
+<div class="center">
       
-  
-    <div class="drop-zone" (drop)="onDrop($event)" (dragover)="onDragOver($event)" style="margin-top: -100px;" [ngStyle]="{'visibility':hideDropBox ? 'visible' : 'hidden'}">
+    <div class="drop-zone-1" (drop)="onDrop($event)" (dragover)="onDragOver($event)" [ngStyle]="{'visibility':hideDropBox ? 'visible' : 'hidden'}">
       <p>drag and drop your image here</p>
       <!-- <input type="file" (change)="onFileSelected($event)" multiple> -->
     </div>
     
-    <div class="image-gallery">
+    <!-- <div class="image-gallery">
       <div *ngFor="let image of imageList" class="image-container card">
         <div><img [src]="image" alt="Uploaded image"></div>
-        <!-- <div><button type="button" (click)="downloadImage(image)">Download</button></div> -->
 
         <div class="overlay">
           <button type="button" class="buttondownload" (click)="downloadImage(image)">Download</button>
           <button type="button" class="buttondownload" (click)="downloadImage(image)">Add new BG</button>
         </div>
       </div>
-
-      
-
-    </div>
-
-    
-
+    </div> -->
 </div>
 
 
@@ -30,8 +22,96 @@
     <ngx-spinner type="ball-scale-multiple"></ngx-spinner>
   </div>
 
+<!-- <style>
 
 
+  .drop-zone {
+  margin-top: 300px;
+  border: 1px dashed #ffffff;
+  border-radius: 40px;
+  width: 400px;
+  height: 300px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.drop-zone p {
+  font-size: 22px;
+  color: #ffffff;
+  text-align: center;
+}
+
+.center {
+
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+  
+  align-content: center; 
+
+  justify-content: center;
+  display: flex;
+  align-items: center;
+
+  margin: 0;
+  top: 50%;
+
+  -ms-transform: translateY(-50%);
+  transform: translate(-50%, 550%); 
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+
+  margin: auto;
+  width: 50%;
+  top:50%;  
+  align-content: center;
+
+  position: absolute;
+  transform: translate(50%, -50%);
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+}
+
+
+</style> -->
+
+<!-- 
+<style>
+
+
+  .center {
+    margin: auto;
+    top: 50%;
+    width: 50%;
+    align-content: center;
+  
+    position: absolute;
+    transform: translate(50%, -50%);
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+      margin: 0;
+    position: absolute;
+    top: 50%;
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+  }
+  
+  </style> -->
+
+<!-- 
 <style>
      h1,
   h2,
@@ -377,7 +457,7 @@
   color: #1951d5;
 }
 
-</style>
+</style> -->
 
 
 
