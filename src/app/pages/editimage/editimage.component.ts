@@ -3,8 +3,6 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Subscription } from 'rxjs';
 import { ForegroundService } from 'src/app/services/foreground.service';
-import { colorMix } from 'tsparticles-engine';
-// import { Background } from 'tsparticles-engine';
 
 @Component({
   selector: 'app-editimage',
@@ -30,10 +28,17 @@ export class EditimageComponent implements OnInit {
   private isDragging: boolean = false;
   private isResizing: boolean = false;
 
+  //BG
   imgX = 0;
   imgY = 0;
   imgWidth = 0;
   imgHeight = 0;
+  //FG
+  imgX2 = 0;
+  imgY2 = 0;
+  imgWidth2 = 0;
+  imgHeight2 = 0;
+
   prevX = 0; 
   prevY = 0;
 
@@ -42,9 +47,8 @@ export class EditimageComponent implements OnInit {
 
   hideDropBox = true;
   
-
   // foreground image properties
-  private foregroundimage = new Image;
+  private backgroundimage = new Image;
   private foregroundimageX: number = 0;
   private foregroundimageY: number = 0;
   private foregroundimageW: number = 0;
@@ -110,10 +114,6 @@ export class EditimageComponent implements OnInit {
             this.img.height = this.img.height / ratio * this.imgRatio;
           }
 
-
-
-
-
           // Draw the image on the canvas
           this.imgX = this.canvas.width/2 - this.img.width/2/this.imgRatio;
           this.imgY = this.canvas.height/2 - this.img.height/2/this.imgRatio;
@@ -121,7 +121,7 @@ export class EditimageComponent implements OnInit {
           this.imgHeight = this.img.height/this.imgRatio;
 
            //set foreground image properties
-          this.foregroundimage = this.img;
+          // this.foregroundimage = this.img;
           this.foregroundimageX = this.imgX;
           this.foregroundimageY = this.imgY;
           this.foregroundimageW = this.imgWidth;
@@ -165,12 +165,35 @@ export class EditimageComponent implements OnInit {
 
           img.onload = () => {
 
+            var resizeheight = 0
+            var resizewidth = 0
+            var resizeratio = 200
 
-            // this.canvasWidth = img.width;
-            // this.canvasHeight = img.height;
-            // this.canvas.height = img.height;
-            // this.canvas.width = img.width;
-            
+            console.log(img.height)
+            console.log(img.width)
+
+            if (img.height >= img.width)
+            {
+              var resizeratio = 250
+              var ratio = img.width / resizeratio;
+
+              resizewidth = resizeratio * this.imgRatio;
+              resizeheight = img.height / ratio * this.imgRatio;
+            }
+            else
+            {
+       
+              var ratio = img.height / resizeratio;
+
+              resizeheight = resizeratio * this.imgRatio;
+              resizewidth = img.width / ratio * this.imgRatio;
+            }           
+
+            this.canvasWidth = resizewidth
+            this.canvasHeight = resizeheight
+            this.canvas.height = resizeheight
+            this.canvas.width = resizewidth
+          
 
             this.canvas.setAttribute('style', "background: url(\'" + base64Image + "\'); background-repeat: no-repeat; background-size: 100% 100%;");
       
@@ -192,11 +215,14 @@ export class EditimageComponent implements OnInit {
           }
         };
 
+        //SET IMAGE FOR DOWNLOAD
+        this.backgroundimage = this.img
+
         //Reset for background image??
         this.foreClicked = false
-        this.hideElement = true
+        this.hideElement = false
 
-        this.hideDropBox = false
+        this.hideDropBox = true
         reader.readAsDataURL(file);   
   }
 
@@ -260,26 +286,41 @@ export class EditimageComponent implements OnInit {
               if (this.foreClicked)
               {
                 ctx.beginPath();
-                ctx.lineWidth = 1;
-                ctx.strokeStyle = "white";                
-                ctx.setLineDash([3]);
-                ctx.rect(this.imgX - 25, this.imgY - 25, this.imgWidth + 50, this.imgHeight + 50);      
+                // ctx.lineWidth = 1;
+                // ctx.strokeStyle = "white";                
+                // ctx.setLineDash([3]);
+                // ctx.rect(this.imgX - 25, this.imgY - 25, this.imgWidth + 50, this.imgHeight + 50);      
+            
+                ctx.strokeStyle = "white"
+                ctx.fillStyle = "white"
+                ctx.lineJoin = "round";
+                ctx.lineWidth = 40
+
+                var x = this.imgX - 25
+                var y = this.imgY - 25
+            
+                var w = this.imgWidth + 50
+                var h = this.imgHeight + 50
+            
+                var r = ctx.lineWidth
+
+                ctx.strokeRect(
+                   x+(r*.5),y+(r*.5),w-r,h-r
+                );
+            
+                ctx.fillRect(
+                   x+(r*.5),y+(r*.5),w-r,h-r
+                );
+            
                 ctx.stroke();
+                ctx.fill();
+
+                // ctx.stroke();
               }
 
-              //UX - GUIDE USER TO RESIZE IMAGE
-              this.hideElement = this.foreClicked
+              
+              this.hideElement =this.foreClicked
      
-              //FIX THE ROTATION OF PROCESSED IMAGE
-              // if (degrees!=0){
-              //   // rotate the canvas to the specified degrees
-              //   ctx.setTransform(1, 0, 0, 1, x, y); // sets scale and origin
-              //   ctx.rotate(degrees*Math.PI/180);
-              // }
-              // else {
-                
-              // }
-
               //CENTRE IMAGE AFTER 1ST UPLOAD
               if (this.startUp == true)
               {
@@ -294,10 +335,12 @@ export class EditimageComponent implements OnInit {
   }
 
 
-  //NOT USED
+  //NOT USED ATM
   handleCanvasClick(event: MouseEvent) {
 
   }
+
+  
 
 
 
@@ -418,7 +461,10 @@ private onMouseUp(event: MouseEvent) {
           this.prevX = event.offsetX;
           this.prevY = event.offsetY;
 
-          this.draw(0);               
+          this.draw(0);     
+          
+
+          
        }; 
    };
 
@@ -454,15 +500,16 @@ private onMouseMove(event: MouseEvent) {
         var deltaX = event.offsetX - this.prevX;
         var deltaY = event.offsetY - this.prevY;
     
-        //  this.imgX += deltaX;
-        //  this.imgY += deltaY;
+         this.imgX += deltaX;
+         this.imgY += deltaY;
     
         this.prevX = event.offsetX;
         this.prevY = event.offsetY;
 
         this.imgWidth = this.imgWidth + (deltaX)
         this.imgHeight = this.imgHeight + (deltaY)
-      
+    
+
         this.draw(0);
       }
 
@@ -503,17 +550,12 @@ private onMouseMove(event: MouseEvent) {
   
 
 
-
-
    //------------------------------------------DOWNLOADS----------------------------------------------
 
     handleDownloadClick(event: MouseEvent) {
 
-console.log( this.backgroundBase64Image)
-
       if (this.backgroundBase64Image == '' || this.backgroundBase64Image == null){
 
-console.log('!=')
         const byteString = atob(this.base64Image.split(',')[1]);
         const mimeString = this.base64Image.split(',')[0].split(':')[1].split(';')[0];
         const ab = new ArrayBuffer(byteString.length);
@@ -551,14 +593,18 @@ console.log('!=')
           if (ctx)
           {
       
-  
-            var img3 = new Image();
+            var img3 = new Image()
             img3.crossOrigin = 'Anonymous';
+
+            // // Convert canvas to dataURL and log to console
             if (this.backgroundBase64Image != '')
             {img3.src = this.backgroundBase64Image;}
             else
             {img3.src = '../../assets/img/bmw.jpg';}
-  
+
+            // img3.height = this.canvas.height
+            // img3.width = this.canvas.width
+
             img3.onload = () => {
               c.height = img3.height;
               c.width = img3.width;
@@ -568,14 +614,34 @@ console.log('!=')
                 // ctx.restore();
                 // ctx.save();
               }  
+
+
+              var dataURL = this.canvas.toDataURL();
+              var img = new Image;
+              img.src = dataURL;
   
-              var img2 = new Image();
-              img2.crossOrigin = 'Anonymous';
-              img2.src = this.base64Image;
-              img2.onload = () => {
+              // var img2 = new Image();
+              img.crossOrigin = 'Anonymous';
+              // img.src = this.base64Image;
+              img.onload = () => {
                 if (ctx){
                   //console.log(img2.src)
-                  ctx.drawImage(img2, this.imgX, this.imgY, this.imgWidth, this.imgHeight)
+                  var ratioX = 0
+                  var ratioY = 0  
+
+                console.log("B" + this.imgX )
+                console.log("B" +this.imgY )
+
+                  this.imgX = this.imgX/ratioX
+                  this.imgY = this.imgY/ratioY
+
+                  console.log("A" + this.imgX )
+                  console.log("A" +this.imgY )
+
+                  // console.log("DL2 " + this.imgX)
+                  // console.log("DL2 " + this.imgY)
+
+                    ctx.drawImage(img, this.imgX, this.imgY, this.imgWidth, this.imgHeight)
                   ctx.restore();
                   ctx.save();
   
